@@ -1,0 +1,1777 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>as-user-guide.md</title>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+
+<style>
+/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+body {
+	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
+	font-size: var(--vscode-markdown-font-size, 14px);
+	padding: 0 26px;
+	line-height: var(--vscode-markdown-line-height, 22px);
+	word-wrap: break-word;
+}
+
+#code-csp-warning {
+	position: fixed;
+	top: 0;
+	right: 0;
+	color: white;
+	margin: 16px;
+	text-align: center;
+	font-size: 12px;
+	font-family: sans-serif;
+	background-color:#444444;
+	cursor: pointer;
+	padding: 6px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+}
+
+#code-csp-warning:hover {
+	text-decoration: none;
+	background-color:#007acc;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+}
+
+body.scrollBeyondLastLine {
+	margin-bottom: calc(100vh - 22px);
+}
+
+body.showEditorSelection .code-line {
+	position: relative;
+}
+
+body.showEditorSelection .code-active-line:before,
+body.showEditorSelection .code-line:hover:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -12px;
+	height: 100%;
+}
+
+body.showEditorSelection li.code-active-line:before,
+body.showEditorSelection li.code-line:hover:before {
+	left: -30px;
+}
+
+.vscode-light.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+.vscode-light.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.40);
+}
+
+.vscode-light.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-dark.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.60);
+}
+
+.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-high-contrast.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 160, 0, 0.7);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 160, 0, 1);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 1px solid -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+hr {
+	border: 0;
+	height: 2px;
+	border-bottom: 2px solid;
+}
+
+h1 {
+	padding-bottom: 0.3em;
+	line-height: 1.2;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table > thead > tr > th {
+	text-align: left;
+	border-bottom: 1px solid;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td {
+	padding: 5px 10px;
+}
+
+table > tbody > tr + tr > td {
+	border-top: 1px solid;
+}
+
+blockquote {
+	margin: 0 7px 0 5px;
+	padding: 0 16px 0 10px;
+	border-left-width: 5px;
+	border-left-style: solid;
+}
+
+code {
+	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+	font-size: 1em;
+	line-height: 1.357em;
+}
+
+body.wordWrap pre {
+	white-space: pre-wrap;
+}
+
+pre:not(.hljs),
+pre.hljs code > div {
+	padding: 16px;
+	border-radius: 3px;
+	overflow: auto;
+}
+
+pre code {
+	color: var(--vscode-editor-foreground);
+	tab-size: 4;
+}
+
+/** Theming */
+
+.vscode-light pre {
+	background-color: rgba(220, 220, 220, 0.4);
+}
+
+.vscode-dark pre {
+	background-color: rgba(10, 10, 10, 0.4);
+}
+
+.vscode-high-contrast pre {
+	background-color: rgb(0, 0, 0);
+}
+
+.vscode-high-contrast h1 {
+	border-color: rgb(0, 0, 0);
+}
+
+.vscode-light table > thead > tr > th {
+	border-color: rgba(0, 0, 0, 0.69);
+}
+
+.vscode-dark table > thead > tr > th {
+	border-color: rgba(255, 255, 255, 0.69);
+}
+
+.vscode-light h1,
+.vscode-light hr,
+.vscode-light table > tbody > tr + tr > td {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vscode-dark h1,
+.vscode-dark hr,
+.vscode-dark table > tbody > tr + tr > td {
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+</style>
+
+<style>
+/* Tomorrow Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+	color: #8e908c;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+	color: #c82829;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+	color: #f5871f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+	color: #eab700;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+	color: #718c00;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+	color: #4271ae;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+	color: #8959a8;
+}
+
+.hljs {
+	display: block;
+	overflow-x: auto;
+	color: #4d4d4c;
+	padding: 0.5em;
+}
+
+.hljs-emphasis {
+	font-style: italic;
+}
+
+.hljs-strong {
+	font-weight: bold;
+}
+</style>
+
+<style>
+/*
+ * Markdown PDF CSS
+ */
+
+ body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
+	padding: 0 12px;
+}
+
+pre {
+	background-color: #f8f8f8;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+pre:not(.hljs) {
+	padding: 23px;
+	line-height: 19px;
+}
+
+blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.emoji {
+	height: 1.4em;
+}
+
+code {
+	font-size: 14px;
+	line-height: 19px;
+}
+
+/* for inline code */
+:not(pre):not(.hljs) > code {
+	color: #C9AE75; /* Change the old color so it seems less like an error */
+	font-size: inherit;
+}
+
+/* Page Break : use <div class="page"/> to insert page break
+-------------------------------------------------------- */
+.page {
+	page-break-after: always;
+}
+
+</style>
+
+<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+</head>
+<body>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
+          ? 'dark'
+          : 'default'
+    });
+  </script>
+<h1 id="ai-security-platform---user-guide">AI-Security Platform - User Guide</h1>
+<p>Complete guide for using the AI-Security frontend dashboard to monitor, analyze, and manage security log detections.</p>
+<hr>
+<h2 id="table-of-contents">Table of Contents</h2>
+<ul>
+<li><a href="#overview">Overview</a></li>
+<li><a href="#getting-started">Getting Started</a></li>
+<li><a href="#navigation">Navigation</a></li>
+<li><a href="#dashboard-page">Dashboard Page</a></li>
+<li><a href="#logs-page">Logs Page</a></li>
+<li><a href="#detections-page">Detections Page</a></li>
+<li><a href="#configuration">Configuration</a>
+<ul>
+<li><a href="#system-settings">System Settings</a></li>
+<li><a href="#rule-management">Rule Management</a></li>
+<li><a href="#feedback-history">Feedback History</a></li>
+<li><a href="#ai-agent-instructions">AI Agent Instructions</a></li>
+</ul>
+</li>
+<li><a href="#common-components">Common Components</a></li>
+<li><a href="#keyboard-shortcuts">Keyboard Shortcuts</a></li>
+<li><a href="#tips--best-practices">Tips &amp; Best Practices</a></li>
+</ul>
+<hr>
+<h2 id="overview">Overview</h2>
+<p>The AI-Security Platform provides a comprehensive web-based interface for monitoring security logs, detecting threats using AI and rule-based systems, and managing security configurations. The platform is designed to be intuitive while providing powerful features for security analysts and administrators.</p>
+<h3 id="key-features">Key Features</h3>
+<ul>
+<li><strong>Real-time Dashboard</strong> - Overview of security metrics and recent detections</li>
+<li><strong>Log Management</strong> - Search, filter, and analyze security logs</li>
+<li><strong>Detection Analysis</strong> - Review AI-detected threats with remediation guidance</li>
+<li><strong>Rule Configuration</strong> - Create and manage custom security detection rules</li>
+<li><strong>AI Configuration</strong> - Configure AI model providers and detection behavior</li>
+<li><strong>Feedback System</strong> - Improve detection accuracy through feedback</li>
+</ul>
+<hr>
+<h2 id="getting-started">Getting Started</h2>
+<h3 id="first-login">First Login</h3>
+<p>When you first access the platform at <code>http://localhost:8080</code> (or your configured URL), you'll land on the Dashboard page.</p>
+<p><img src="Documentation Screenshots/Initial Dashboard View.png" alt="alt text"></p>
+<h3 id="required-setup-first-time-users">Required Setup (First Time Users)</h3>
+<p>Before using the platform, ensure:</p>
+<ol>
+<li><strong>AI Model is Configured</strong> - Navigate to Configuration → System Settings → AI Model Configuration</li>
+<li><strong>Detection Mode is Set</strong> - Choose between Polling, Realtime, or AI-only mode</li>
+<li><strong>Rules are Loaded</strong> (Optional) - Upload or create detection rules if using rule-based detection</li>
+</ol>
+<p><img src="Documentation Screenshots/System Settings - AI Model Configuration.png" alt="alt text"></p>
+<hr>
+<h2 id="navigation">Navigation</h2>
+<h3 id="top-navigation-bar">Top Navigation Bar</h3>
+<p>The navigation bar is always visible at the top of the screen and provides access to all main sections.</p>
+<p><img src="Documentation Screenshots/Navigation Bar.png" alt="alt text"></p>
+<h4 id="navigation-items">Navigation Items</h4>
+<ol>
+<li><strong>Dashboard</strong> - Home page with overview statistics and recent detections</li>
+<li><strong>Detections</strong> - Dedicated view for all security detections with filtering</li>
+<li><strong>Logs</strong> - View and search all ingested security logs</li>
+<li><strong>Configuration</strong> - Access to system settings, rules, feedback, and AI agent configuration</li>
+</ol>
+<h4 id="action-buttons">Action Buttons</h4>
+<ul>
+<li><strong>Search Icon (🔍)</strong> - Opens the Command Palette for quick navigation</li>
+<li><strong>Notification Bell (🔔)</strong> - Shows notification sidebar with system alerts
+<ul>
+<li>Red badge indicates unread notifications</li>
+<li>Click to toggle notification panel</li>
+</ul>
+</li>
+</ul>
+<h3 id="mobile-navigation">Mobile Navigation</h3>
+<p>On mobile devices, tap the <strong>menu icon (☰)</strong> to open the side navigation drawer.</p>
+<p><img src="Documentation Screenshots/Mobile Navigation Bar.png" alt="alt text"></p>
+<hr>
+<h2 id="dashboard-page">Dashboard Page</h2>
+<p>The Dashboard provides a high-level overview of your security posture with real-time statistics and visualizations.</p>
+<h3 id="page-header">Page Header</h3>
+<ul>
+<li><strong>Date Range Picker</strong> - Select time period for statistics (presets: Today, Last 7 days, Last 30 days, Custom)</li>
+<li><strong>Download Report Button</strong> - Export detections or logs for the selected date range</li>
+</ul>
+<h3 id="statistics-cards">Statistics Cards</h3>
+<p>Four key metrics are displayed at the top:</p>
+<h4 id="1-total-logs">1. Total Logs</h4>
+<ul>
+<li><strong>Purpose</strong>: Shows total number of logs ingested in the selected time period</li>
+<li><strong>Trend Indicator</strong>: Green/red arrow shows increase/decrease from previous period</li>
+<li><strong>Action</strong>: Click to navigate to Logs page</li>
+</ul>
+<h4 id="2-total-detections">2. Total Detections</h4>
+<ul>
+<li><strong>Purpose</strong>: Shows all security detections created in the time period</li>
+<li><strong>Trend Indicator</strong>: Percentage change from previous period</li>
+<li><strong>Action</strong>: Click to navigate to Detections page</li>
+</ul>
+<h4 id="3-active-detections">3. Active Detections</h4>
+<ul>
+<li><strong>Purpose</strong>: Shows detections with &quot;active&quot; status requiring attention</li>
+<li><strong>Trend Indicator</strong>: Change in active detection count</li>
+<li><strong>Action</strong>: Click to view active detections with pre-applied filter</li>
+</ul>
+<h4 id="4-critical-alerts">4. Critical Alerts</h4>
+<ul>
+<li><strong>Purpose</strong>: Shows high-severity detections requiring immediate attention</li>
+<li><strong>Trend Indicator</strong>: Change in critical alerts count</li>
+<li><strong>Action</strong>: Click to view critical detections with severity filter</li>
+</ul>
+<h3 id="detections--logs-chart-radar-chart">Detections &amp; Logs Chart (Radar Chart)</h3>
+<ul>
+<li><strong>Purpose</strong>: Visual comparison of logs vs detections across different categories</li>
+<li><strong>Grouping Options</strong>:
+<ul>
+<li>By Source (evtx, syslog, custom)</li>
+<li>By Event Type (Security, Application, System)</li>
+</ul>
+</li>
+<li><strong>How to Use</strong>:
+<ul>
+<li>Click the <strong>three-dot menu</strong> in card header to change grouping</li>
+<li>Hover over chart points to see exact values</li>
+<li>Compare log volume with detection rate per category</li>
+</ul>
+</li>
+</ul>
+<h3 id="detections-table">Detections Table</h3>
+<p>Displays the most recent detections with quick actions.</p>
+<p><img src="Documentation Screenshots/Dashboard Detection Table.png" alt="alt text"></p>
+<h4 id="table-columns">Table Columns</h4>
+<table>
+<thead>
+<tr>
+<th>Column</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Severity</strong></td>
+<td>Visual indicator (Critical, High, Medium, Low, Info)</td>
+</tr>
+<tr>
+<td><strong>Title</strong></td>
+<td>Detection name/summary</td>
+</tr>
+<tr>
+<td><strong>Category</strong></td>
+<td>Type of threat detected</td>
+</tr>
+<tr>
+<td><strong>Status</strong></td>
+<td>Current state (active, investigating, resolved, false_positive)</td>
+</tr>
+<tr>
+<td><strong>Created At</strong></td>
+<td>When detection was created</td>
+</tr>
+<tr>
+<td><strong>Actions</strong></td>
+<td>Quick action menu (⋮)</td>
+</tr>
+</tbody>
+</table>
+<h4 id="table-features">Table Features</h4>
+<ul>
+<li><strong>Click Row</strong> - Opens detailed detection modal</li>
+<li><strong>Sort Columns</strong> - Click column headers to sort</li>
+<li><strong>Pagination</strong> - Navigate through pages at bottom</li>
+<li><strong>Bulk Actions</strong> - Select multiple rows with checkboxes
+<ul>
+<li>Update status for multiple detections</li>
+<li>Delete multiple detections</li>
+</ul>
+</li>
+</ul>
+<h4 id="quick-actions-three-dot-menu">Quick Actions (Three-Dot Menu)</h4>
+<ul>
+<li><strong>Update Status</strong> - Change to: investigating, resolved, false_positive, active</li>
+<li><strong>Delete</strong> - Remove detection permanently</li>
+</ul>
+<hr>
+<h2 id="logs-page">Logs Page</h2>
+<p>The Logs page provides comprehensive tools for searching, filtering, and analyzing security logs from various sources.</p>
+<p><img src="Documentation Screenshots/Full Logs Page.png" alt="alt text"></p>
+<h3 id="page-header">Page Header</h3>
+<ul>
+<li><strong>Title &amp; Description</strong> - Page identification</li>
+<li><strong>Export Logs Button</strong> - Download logs in CSV or JSON format</li>
+</ul>
+<h3 id="log-distribution-chart-sunburst-chart">Log Distribution Chart (Sunburst Chart)</h3>
+<p><img src="Documentation Screenshots/Log Distribution.png" alt="alt text"></p>
+<ul>
+<li><strong>Purpose</strong>: Hierarchical visualization of log distribution</li>
+<li><strong>Grouping Options</strong> (three-dot menu):
+<ul>
+<li>Source (where logs came from)</li>
+<li>Severity (critical, high, medium, low, info)</li>
+<li>Event Type (category of events)</li>
+</ul>
+</li>
+<li><strong>How to Read</strong>:
+<ul>
+<li>Inner ring: Primary category (e.g., sources)</li>
+<li>Outer rings: Sub-categories and severity levels</li>
+<li>Hover to see exact counts</li>
+<li>Click segments to drill down</li>
+</ul>
+</li>
+<li><strong>Chart Stats Panel</strong>: Shows total count and breakdown with color legend</li>
+</ul>
+<h3 id="log-activity-timeline">Log Activity Timeline</h3>
+<p><img src="Documentation Screenshots/Log Activity TimeLine.png" alt="alt text"></p>
+<ul>
+<li><strong>Purpose</strong>: Shows log volume over time</li>
+<li><strong>Grouping Options</strong>:
+<ul>
+<li><strong>Hour</strong> - Hourly breakdown (best for single day)</li>
+<li><strong>Day</strong> - Daily breakdown (best for weeks/months)</li>
+</ul>
+</li>
+<li><strong>How to Use</strong>:
+<ul>
+<li>Toggle between Hour/Day view using buttons</li>
+<li>Hover over line to see exact count at each point</li>
+<li>Identify spikes in activity that may indicate issues</li>
+</ul>
+</li>
+</ul>
+<h3 id="logs-table">Logs Table</h3>
+<p><img src="Documentation Screenshots/Logs Table.png" alt="alt text"></p>
+<h4 id="search--filter-toolbar">Search &amp; Filter Toolbar</h4>
+<ul>
+<li><strong>Search Box</strong> - Free-text search across all log fields</li>
+<li><strong>Filters Button</strong> - Toggle advanced filtering panel
+<ul>
+<li>Active filter indicator shows when filters are applied</li>
+</ul>
+</li>
+</ul>
+<p><img src="Documentation Screenshots/Logs Filters.png" alt="alt text"></p>
+<h4 id="filter-panel-options">Filter Panel Options</h4>
+<p>When you click <strong>Filters</strong>, a panel appears with options:</p>
+<ul>
+<li><strong>Source</strong> - Filter by log source (evtx, syslog, etc.)</li>
+<li><strong>Severity</strong> - Filter by severity level</li>
+<li><strong>Event Type</strong> - Filter by event category</li>
+<li><strong>Date Range</strong> - Custom start and end dates</li>
+<li><strong>Processed Status</strong> - Show only processed/unprocessed logs</li>
+<li><strong>Has Detections</strong> - Show only logs with associated detections</li>
+</ul>
+<p><strong>Buttons</strong>:</p>
+<ul>
+<li><strong>Apply</strong> - Apply current filters and close panel</li>
+<li><strong>Clear</strong> - Remove all filters</li>
+<li><strong>Close (✕)</strong> - Close panel without applying changes</li>
+</ul>
+<h4 id="table-columns">Table Columns</h4>
+<table>
+<thead>
+<tr>
+<th>Column</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Timestamp</strong></td>
+<td>When the event occurred</td>
+</tr>
+<tr>
+<td><strong>Source</strong></td>
+<td>Origin of the log (evtx, syslog, etc.)</td>
+</tr>
+<tr>
+<td><strong>Event Type</strong></td>
+<td>Category/channel of the event</td>
+</tr>
+<tr>
+<td><strong>Severity</strong></td>
+<td>Importance level with color coding</td>
+</tr>
+<tr>
+<td><strong>Processed</strong></td>
+<td>Checkmark if log has been analyzed</td>
+</tr>
+<tr>
+<td><strong>Detections</strong></td>
+<td>Count of associated detections</td>
+</tr>
+<tr>
+<td><strong>Actions</strong></td>
+<td>Quick action menu</td>
+</tr>
+</tbody>
+</table>
+<h4 id="table-interactions">Table Interactions</h4>
+<ul>
+<li><strong>Click Row</strong> - Opens log detail modal</li>
+<li><strong>Sort</strong> - Click column headers to change sort order</li>
+<li><strong>Pagination</strong> - Navigate pages at bottom</li>
+<li><strong>Bulk Selection</strong> - Select multiple logs with checkboxes
+<ul>
+<li>Trigger detection for multiple logs at once</li>
+</ul>
+</li>
+</ul>
+<h4 id="row-actions-three-dot-menu">Row Actions (Three-Dot Menu)</h4>
+<ul>
+<li><strong>View Detections</strong> - Navigate to Detections page filtered by this log</li>
+<li><strong>Trigger Detection</strong> - Manually run detection analysis on this log</li>
+</ul>
+<h3 id="log-detail-modal">Log Detail Modal</h3>
+<p>When you click a log row, a modal shows complete log information:</p>
+<p><img src="Documentation Screenshots/Log Details.png" alt="alt text">
+<img src="Documentation Screenshots/Log Details - detection.png" alt="alt text"></p>
+<h4 id="modal-sections">Modal Sections</h4>
+<ol>
+<li>
+<p><strong>Header</strong></p>
+<ul>
+<li>Title with timestamp</li>
+<li>Close button (✕)</li>
+</ul>
+</li>
+<li>
+<p><strong>Overview Tab</strong></p>
+<ul>
+<li>Source, Event Type, Severity</li>
+<li>Processed status</li>
+<li>Associated detection count</li>
+<li>Timestamps (created, updated)</li>
+</ul>
+</li>
+<li>
+<p><strong>Raw Data Tab</strong></p>
+<ul>
+<li>Complete original log data in JSON format</li>
+<li>Syntax highlighted for readability</li>
+<li>Copy button to copy entire JSON</li>
+</ul>
+</li>
+<li>
+<p><strong>Normalized Data Tab</strong></p>
+<ul>
+<li>Structured fields extracted from log:
+<ul>
+<li>Host, User, Source IP, Destination IP</li>
+<li>Process, File Path, Action, Result</li>
+<li>Event ID, Channel</li>
+<li>Additional custom fields</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>Associated Detections</strong> (if any)</p>
+<ul>
+<li>List of detections created from this log</li>
+<li>Click detection to open its detail view</li>
+</ul>
+</li>
+</ol>
+<h4 id="modal-actions">Modal Actions</h4>
+<ul>
+<li><strong>View Detection</strong> - Opens first associated detection</li>
+<li><strong>Close</strong> - Close modal</li>
+</ul>
+<hr>
+<h2 id="detections-page">Detections Page</h2>
+<p>The Detections page is the core of threat analysis, providing detailed information about AI-detected security threats and remediation guidance.</p>
+<p><img src="Documentation Screenshots/Detection Name.png" alt="alt text"></p>
+<h3 id="page-header">Page Header</h3>
+<ul>
+<li><strong>Title &amp; Description</strong></li>
+<li><strong>Download Report Button</strong> - Export detections in CSV, JSON, Markdown, or HTML</li>
+</ul>
+<h3 id="detections-chart-sunburst-chart">Detections Chart (Sunburst Chart)</h3>
+<p><img src="Documentation Screenshots/Detection Sunburst Chart.png" alt="alt text"></p>
+<ul>
+<li><strong>Purpose</strong>: Hierarchical view of detections by category and severity</li>
+<li><strong>Grouping Options</strong> (three-dot menu):
+<ul>
+<li><strong>Severity</strong> - Group by critical, high, medium, low, info</li>
+<li><strong>Category</strong> - Group by threat type (malware, intrusion, data_breach, etc.)</li>
+</ul>
+</li>
+<li><strong>How to Use</strong>:
+<ul>
+<li>Inner ring shows primary grouping</li>
+<li>Outer rings show sub-categories</li>
+<li>Hover for exact counts</li>
+<li>Color-coded for quick severity assessment</li>
+</ul>
+</li>
+</ul>
+<h3 id="top-detections-card">Top Detections Card</h3>
+<p><img src="Documentation Screenshots/Top Detections Chart.png" alt="alt text"></p>
+<ul>
+<li><strong>Purpose</strong>: Quick view of the 5 most recent or highest-priority detections</li>
+<li><strong>Information Shown</strong>:
+<ul>
+<li>Detection title</li>
+<li>Severity badge</li>
+<li>Source IP (if available)</li>
+</ul>
+</li>
+<li><strong>Action</strong>: Click any detection to open its detail modal</li>
+</ul>
+<h3 id="detections-table">Detections Table</h3>
+<p><img src="Documentation Screenshots/Detection Table.png" alt="alt text"></p>
+<h4 id="search--filter-toolbar">Search &amp; Filter Toolbar</h4>
+<ul>
+<li><strong>Search Box</strong> - Search detection titles, descriptions, categories</li>
+<li><strong>Filters Button</strong> - Toggle advanced filter panel</li>
+</ul>
+<p><img src="Documentation Screenshots/Detection Filter Table.png" alt="alt text"></p>
+<h4 id="filter-panel-options">Filter Panel Options</h4>
+<ul>
+<li><strong>Status</strong> - active, investigating, resolved, false_positive</li>
+<li><strong>Severity</strong> - critical, high, medium, low, info</li>
+<li><strong>Category</strong> - malware, intrusion, data_breach, unauthorized_access, etc.</li>
+<li><strong>Date Range</strong> - Start and end dates</li>
+<li><strong>Source</strong> - Log source that triggered detection</li>
+<li><strong>Log ID</strong> - Specific log identifier</li>
+</ul>
+<h4 id="table-columns">Table Columns</h4>
+<table>
+<thead>
+<tr>
+<th>Column</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Severity</strong></td>
+<td>Visual badge (color-coded)</td>
+</tr>
+<tr>
+<td><strong>Title</strong></td>
+<td>Detection summary</td>
+</tr>
+<tr>
+<td><strong>Category</strong></td>
+<td>Threat classification</td>
+</tr>
+<tr>
+<td><strong>Status</strong></td>
+<td>Current investigation status</td>
+</tr>
+<tr>
+<td><strong>Confidence</strong></td>
+<td>AI confidence score (0-100%)</td>
+</tr>
+<tr>
+<td><strong>Created At</strong></td>
+<td>Detection timestamp</td>
+</tr>
+<tr>
+<td><strong>Actions</strong></td>
+<td>Quick actions menu</td>
+</tr>
+</tbody>
+</table>
+<h4 id="table-features">Table Features</h4>
+<ul>
+<li><strong>Click Row</strong> - Opens detection detail modal (primary action)</li>
+<li><strong>Sort</strong> - Click headers to sort</li>
+<li><strong>Bulk Selection</strong> - Select multiple detections
+<ul>
+<li>Update status for multiple</li>
+<li>Delete multiple detections</li>
+</ul>
+</li>
+<li><strong>Pagination</strong> - Navigate through pages</li>
+</ul>
+<h4 id="quick-actions-menu">Quick Actions Menu</h4>
+<ul>
+<li><strong>Update Status</strong> - Change to investigating/resolved/false_positive/active</li>
+<li><strong>Delete</strong> - Permanently remove detection</li>
+</ul>
+<h3 id="detection-detail-modal">Detection Detail Modal</h3>
+<p>The most important component - provides complete information about a detected threat.</p>
+<p><img src="Documentation Screenshots/Detection Details + MITRE.png" alt="alt text"></p>
+<h4 id="modal-header">Modal Header</h4>
+<ul>
+<li><strong>Title</strong> - Detection name</li>
+<li><strong>Severity Badge</strong> - Color-coded severity level</li>
+<li><strong>Status Badge</strong> - Current status</li>
+<li><strong>Close Button (✕)</strong></li>
+</ul>
+<h4 id="modal-tabs">Modal Tabs</h4>
+<h5 id="1-overview-tab">1. Overview Tab</h5>
+<p><strong>Key Information Section</strong>:</p>
+<ul>
+<li><strong>Severity</strong> - Threat severity level</li>
+<li><strong>Category</strong> - Type of threat detected</li>
+<li><strong>Status</strong> - Current investigation status</li>
+<li><strong>Confidence</strong> - AI confidence percentage</li>
+<li><strong>Created At</strong> - When detected</li>
+<li><strong>Updated At</strong> - Last modification time</li>
+</ul>
+<p><strong>Description Section</strong>:</p>
+<ul>
+<li>Detailed explanation of what was detected</li>
+<li>Why it's classified as this threat type</li>
+<li>Context about the security event</li>
+</ul>
+<h5 id="2-detection-tab">2. Detection Tab</h5>
+<p><strong>Analysis Section</strong>:</p>
+<ul>
+<li>Complete AI-generated analysis</li>
+<li>Technical details about the threat</li>
+<li>Indicators of compromise (IoCs)</li>
+<li>Attack patterns identified</li>
+</ul>
+<p><strong>Evidence Section</strong>:</p>
+<ul>
+<li>Specific log entries that triggered detection</li>
+<li>Suspicious patterns or behaviors</li>
+<li>Timeline of events</li>
+</ul>
+<p><img src="Documentation Screenshots/Detction Details - Logs Related to detection.png" alt="alt text"></p>
+<h5 id="3-remediation-tab">3. Remediation Tab</h5>
+<p><strong>Action Plan</strong>:</p>
+<ul>
+<li>Step-by-step remediation instructions</li>
+<li>Immediate actions to contain threat</li>
+<li>Long-term security improvements</li>
+<li>Best practices to prevent recurrence</li>
+</ul>
+<p><strong>Actions Available</strong>:</p>
+<ul>
+<li><strong>Regenerate Remediation</strong> - Ask AI to create new remediation plan
+<ul>
+<li>Useful if you want different approach</li>
+<li>Uses updated threat intelligence</li>
+</ul>
+</li>
+</ul>
+<p><img src="Documentation Screenshots/Detection Details- Remediation Plan.png" alt="alt text"></p>
+<h5 id="4-logs-tab">4. Logs Tab</h5>
+<p><strong>Associated Logs</strong>:</p>
+<ul>
+<li>All logs that contributed to this detection</li>
+<li>Mini-table with key log information:
+<ul>
+<li>Timestamp</li>
+<li>Source</li>
+<li>Event Type</li>
+<li>Severity</li>
+</ul>
+</li>
+</ul>
+<p><strong>Actions</strong>:</p>
+<ul>
+<li><strong>Click Log Row</strong> - Opens log detail modal</li>
+<li><strong>View in Logs Page</strong> - Navigate to Logs page with filter applied</li>
+</ul>
+<h4 id="modal-footer-actions">Modal Footer Actions</h4>
+<p><img src="Documentation Screenshots/Detection Details- Status- Notes - Feedback.png" alt="alt text"></p>
+<p>Available actions depend on detection status:</p>
+<ul>
+<li>
+<p><strong>Update Status Dropdown</strong> - Change detection status:</p>
+<ul>
+<li><strong>Investigating</strong> - Mark as under investigation</li>
+<li><strong>Resolved</strong> - Mark threat as handled</li>
+<li><strong>False Positive</strong> - Mark as incorrect detection</li>
+<li><strong>Active</strong> - Return to active state</li>
+<li>Optional: Add notes explaining status change</li>
+</ul>
+</li>
+<li>
+<p><strong>Delete Button</strong> - Permanently remove detection</p>
+<ul>
+<li>Confirmation required</li>
+<li>Action cannot be undone</li>
+</ul>
+</li>
+<li>
+<p><strong>Provide Feedback Button</strong> - Help improve AI accuracy</p>
+<ul>
+<li>Opens feedback form</li>
+<li>Options: Helpful / Not Helpful</li>
+<li>Select feedback type:
+<ul>
+<li>Detection only</li>
+<li>Remediation only</li>
+<li>Both</li>
+</ul>
+</li>
+<li>Add detailed comments (optional)</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="configuration">Configuration</h2>
+<p>The Configuration section is the control center for all system settings, rules, feedback management, and AI agent configuration.</p>
+<p><img src="Documentation Screenshots/Configuration Landing Page.png" alt="alt text"></p>
+<h3 id="configuration-landing-page">Configuration Landing Page</h3>
+<p>Four main configuration areas are presented as cards:</p>
+<ol>
+<li><strong>System Settings</strong> - Detection modes, AI model configuration</li>
+<li><strong>Rule Management</strong> - Create and manage security detection rules</li>
+<li><strong>Feedback History</strong> - Review user feedback on detections</li>
+<li><strong>AI Agent Instructions</strong> - Configure AI agent prompts and behavior</li>
+</ol>
+<p>Click any card to navigate to that configuration area.</p>
+<hr>
+<h2 id="system-settings">System Settings</h2>
+<p>Configure how the platform detects threats and which AI model to use.</p>
+<p><img src="Documentation Screenshots/System Settings.png" alt="alt text"></p>
+<h3 id="page-header">Page Header</h3>
+<ul>
+<li><strong>Back Button (←)</strong> - Return to Configuration landing</li>
+<li><strong>Title &amp; Description</strong></li>
+<li><strong>Actions</strong>:
+<ul>
+<li><strong>Reset to Defaults</strong> - Restore environment default settings</li>
+<li><strong>Save Changes</strong> - Apply and save modifications</li>
+</ul>
+</li>
+</ul>
+<p><strong>Save Changes</strong> button is only enabled when you've made changes.</p>
+<h3 id="detection-configuration">Detection Configuration</h3>
+<p><img src="Documentation Screenshots/Detection Configuration Card.png" alt="alt text"></p>
+<h4 id="detection-mode">Detection Mode</h4>
+<p><strong>Dropdown Options</strong>:</p>
+<ul>
+<li><strong>Polling</strong> - Checks for new logs at regular intervals (recommended for most use cases)</li>
+<li><strong>Realtime</strong> - Instant detection as logs arrive (requires WebSocket support)</li>
+<li><strong>AI Only</strong> - Uses only AI for detection, no rules (requires batch size ≤ 10)</li>
+</ul>
+<p><img src="Documentation Screenshots/Detection Mode Dropdown.png" alt="alt text"></p>
+<p><strong>When to Use</strong>:</p>
+<ul>
+<li><strong>Polling</strong>: Best for most deployments, lower resource usage</li>
+<li><strong>Realtime</strong>: When immediate detection is critical</li>
+<li><strong>AI Only</strong>: Pure AI detection without rule-based filtering</li>
+</ul>
+<h4 id="polling-interval-milliseconds">Polling Interval (milliseconds)</h4>
+<ul>
+<li><strong>When Visible</strong>: Only shown for Polling and AI-only modes</li>
+<li><strong>Purpose</strong>: How often to check for new unprocessed logs</li>
+<li><strong>Range</strong>: Minimum 1000ms (1 second)</li>
+<li><strong>Default</strong>: 600000ms (10 minutes)</li>
+<li><strong>Recommendation</strong>:
+<ul>
+<li>High-traffic: 60000ms (1 minute)</li>
+<li>Normal traffic: 300000-600000ms (5-10 minutes)</li>
+<li>Low-traffic: 600000ms+ (10+ minutes)</li>
+</ul>
+</li>
+</ul>
+<p><img src="Documentation Screenshots/Polling Interval.png" alt="alt text"></p>
+<h4 id="batch-size">Batch Size</h4>
+<ul>
+<li><strong>Purpose</strong>: Number of logs to process in each detection batch</li>
+<li><strong>Range</strong>: 1-1000 (1-10 for AI-only mode)</li>
+<li><strong>Default</strong>: 100</li>
+<li><strong>Important</strong>: AI-only mode limited to 10 to manage AI token usage</li>
+<li><strong>Recommendation</strong>:
+<ul>
+<li>Rule-based: 100-500 logs</li>
+<li>AI-only: 5-10 logs (fewer = better quality)</li>
+</ul>
+</li>
+</ul>
+<p><img src="Documentation Screenshots/Batch Size Config.png" alt="alt text"></p>
+<h4 id="log-grouping-mode">Log Grouping Mode</h4>
+<p><img src="Documentation Screenshots/Grouping Mode.png" alt="alt text"></p>
+<ul>
+<li><strong>Purpose</strong>: How to group logs before detection analysis</li>
+<li><strong>Options</strong>:
+<ul>
+<li><strong>Host Only</strong> - All logs from same host are grouped together</li>
+<li><strong>Host + User + Source IP</strong> - Finer grouping requiring all three fields to match</li>
+</ul>
+</li>
+</ul>
+<p><strong>When to Use</strong>:</p>
+<ul>
+<li><strong>Host Only</strong>: When you want to see all activity from a specific machine</li>
+<li><strong>Host + User + Source IP</strong>: When you want to separate activities by user and source</li>
+</ul>
+<p><strong>Example</strong>:</p>
+<ul>
+<li>Host Only: All logs from <code>SERVER-01</code> grouped together</li>
+<li>Host + User + Source IP: Separate groups for:
+<ul>
+<li><code>SERVER-01 + alice + 192.168.1.50</code></li>
+<li><code>SERVER-01 + bob + 192.168.1.51</code></li>
+</ul>
+</li>
+</ul>
+<h3 id="ai-model-configuration">AI Model Configuration</h3>
+<p><img src="Documentation Screenshots/Ai Model Configuration.png" alt="alt text"></p>
+<h4 id="model-provider">Model Provider</h4>
+<p><strong>Dropdown Options</strong>:</p>
+<ul>
+<li><strong>OpenAI</strong> - OpenAI GPT models (gpt-4o, gpt-4, gpt-3.5-turbo)</li>
+<li><strong>Azure OpenAI</strong> - Microsoft Azure hosted OpenAI</li>
+<li><strong>Ollama</strong> - Local LLM models</li>
+<li><strong>Mistral AI</strong> - Mistral AI models</li>
+</ul>
+<p><img src="Documentation Screenshots/Modal Provider DropDown.png" alt="alt text"></p>
+<h4 id="provider-specific-fields">Provider-Specific Fields</h4>
+<p>Fields change based on selected provider:</p>
+<p><strong>OpenAI Configuration</strong>:</p>
+<ul>
+<li><strong>Model</strong> - Model name (e.g., gpt-4o, gpt-4-turbo)</li>
+<li><strong>API Key</strong> - Your OpenAI API key
+<ul>
+<li>Shows <code>***Redacted***</code> if previously configured</li>
+<li>Click <strong>Unlock</strong> to change existing key</li>
+</ul>
+</li>
+</ul>
+<p><strong>Azure OpenAI Configuration</strong>:</p>
+<ul>
+<li><strong>Model</strong> - Deployment name in Azure</li>
+<li><strong>Base URL</strong> - Azure OpenAI endpoint (e.g., <code>https://your-resource.openai.azure.com</code>)</li>
+<li><strong>API Key</strong> - Azure OpenAI API key</li>
+<li><strong>API Version</strong> - API version (e.g., <code>2024-02-01</code>)</li>
+</ul>
+<p><strong>Ollama Configuration</strong>:</p>
+<ul>
+<li><strong>Model</strong> - Ollama model name (e.g., <code>llama2</code>, <code>mistral</code>)</li>
+<li><strong>Base URL</strong> - Ollama server URL (e.g., <code>http://localhost:11434</code>)</li>
+</ul>
+<p><strong>Mistral AI Configuration</strong>:</p>
+<ul>
+<li><strong>Model</strong> - Model name (e.g., <code>mistral-large-latest</code>)</li>
+<li><strong>API Key</strong> - Mistral AI API key</li>
+<li><strong>Base URL</strong> - API endpoint (default: <code>https://api.mistral.ai</code>)</li>
+</ul>
+<h4 id="field-features">Field Features</h4>
+<ul>
+<li><strong>Required Fields</strong> - Marked with red asterisk (*)</li>
+<li><strong>Help Text</strong> - Gray text below each field explains purpose</li>
+<li><strong>Locked API Keys</strong> - Previously saved keys are masked for security
+<ul>
+<li>Click <strong>Unlock</strong> button to edit</li>
+</ul>
+</li>
+<li><strong>Validation</strong> - Save button disabled if required fields are missing</li>
+</ul>
+<h4 id="saving-changes">Saving Changes</h4>
+<ol>
+<li>Make your changes to any settings</li>
+<li><strong>Save Changes</strong> button becomes enabled (blue)</li>
+<li>Click <strong>Save Changes</strong></li>
+<li>Success toast notification appears</li>
+<li>Settings are immediately active</li>
+</ol>
+<h4 id="resetting-to-defaults">Resetting to Defaults</h4>
+<ol>
+<li>Click <strong>Reset to Defaults</strong> button</li>
+<li>Confirmation dialog appears</li>
+<li>Confirm to restore all settings to environment values</li>
+<li><strong>Warning</strong>: All custom configurations are lost</li>
+</ol>
+<hr>
+<h2 id="rule-management">Rule Management</h2>
+<p>Create, edit, and manage security detection rules using a visual editor or YAML upload.</p>
+<p><img src="Documentation Screenshots/Rule Management Page.png" alt="alt text"></p>
+<h3 id="page-header">Page Header</h3>
+<ul>
+<li><strong>Back Button (←)</strong> - Return to Configuration</li>
+<li><strong>Title &amp; Description</strong></li>
+<li><strong>Actions</strong>:
+<ul>
+<li><strong>Upload YAML</strong> - Import rules from YAML file</li>
+<li><strong>Reload Rules</strong> - Refresh rules from file system</li>
+<li><strong>Create Rule</strong> - Open rule editor to create new rule</li>
+</ul>
+</li>
+</ul>
+<p><img src="Documentation Screenshots/Rule Management Header Actions.png" alt="alt text"></p>
+<h3 id="rules-table">Rules Table</h3>
+<h4 id="table-columns">Table Columns</h4>
+<table>
+<thead>
+<tr>
+<th>Column</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Rule ID</strong></td>
+<td>Unique identifier</td>
+</tr>
+<tr>
+<td><strong>Name</strong></td>
+<td>Rule name/title</td>
+</tr>
+<tr>
+<td><strong>Enabled</strong></td>
+<td>Checkmark if active</td>
+</tr>
+<tr>
+<td><strong>Severity</strong></td>
+<td>Detection severity if triggered</td>
+</tr>
+<tr>
+<td><strong>Category</strong></td>
+<td>Threat category</td>
+</tr>
+<tr>
+<td><strong>Actions</strong></td>
+<td>Edit/Delete menu</td>
+</tr>
+</tbody>
+</table>
+<h4 id="table-features">Table Features</h4>
+<ul>
+<li><strong>Click Row</strong> - Opens rule detail modal (read-only view)</li>
+<li><strong>Sort</strong> - Click headers to sort</li>
+<li><strong>Pagination</strong> - Navigate through rules</li>
+<li><strong>Search</strong> (if many rules) - Search by name or ID</li>
+</ul>
+<h4 id="row-actions">Row Actions</h4>
+<ul>
+<li><strong>Edit</strong> - Opens rule editor with current rule data</li>
+<li><strong>Delete</strong> - Permanently remove rule (confirmation required)</li>
+</ul>
+<h3 id="creating-a-rule">Creating a Rule</h3>
+<p>Click <strong>Create Rule</strong> to open the rule editor modal.</p>
+<p><img src="Documentation Screenshots/Create Rule screen.png" alt="alt text"></p>
+<h4 id="rule-editor-fields">Rule Editor Fields</h4>
+<p><strong>Basic Information</strong>:</p>
+<ul>
+<li><strong>Rule ID</strong> - Unique identifier (auto-generated, can customize)</li>
+<li><strong>Name</strong> - Human-readable rule name</li>
+<li><strong>Description</strong> - What this rule detects</li>
+<li><strong>Enabled</strong> - Toggle to activate/deactivate rule</li>
+</ul>
+<p><img src="Documentation Screenshots/Rules Basic Info Section.png" alt="alt text"></p>
+<p><strong>Classification</strong>:</p>
+<ul>
+<li><strong>Severity</strong> - Dropdown: critical, high, medium, low, info</li>
+<li><strong>Category</strong> - Dropdown: malware, intrusion, data_breach, etc.</li>
+</ul>
+<p><strong>Detection Logic</strong>:</p>
+<ul>
+<li><strong>Condition Builder</strong> - Visual interface for building detection conditions
+<ul>
+<li><strong>Add Condition</strong> - Click to add new condition</li>
+<li><strong>Field</strong> - Select log field to check (e.g., <code>normalized_data.event_id</code>)</li>
+<li><strong>Operator</strong> - Select comparison (equals, contains, greater than, etc.)</li>
+<li><strong>Value</strong> - Enter value to match</li>
+<li><strong>Logic</strong> - AND/OR between conditions</li>
+</ul>
+</li>
+</ul>
+<p><img src="Documentation Screenshots/Rules Condition Builder.png" alt="alt text"></p>
+<p><strong>Example Rule</strong>:</p>
+<pre class="hljs"><code><div>Rule: Failed Login Attempts
+Condition 1: event_id equals 4625
+Condition 2: user_name not_equals &quot;SYSTEM&quot;
+Logic: AND
+Result: Detects failed Windows login attempts by real users
+</div></code></pre>
+<p><strong>Additional Settings</strong>:</p>
+<ul>
+<li><strong>Tags</strong> - Optional labels for organizing rules (comma-separated)</li>
+</ul>
+<p><strong>Actions</strong>:</p>
+<ul>
+<li><strong>Cancel</strong> - Close without saving</li>
+<li><strong>Save Rule</strong> - Create/update rule</li>
+</ul>
+<h3 id="uploading-rules-yaml">Uploading Rules (YAML)</h3>
+<p>Click <strong>Upload YAML</strong> to bulk import rules.</p>
+<p><img src="Documentation Screenshots/Rules YAML upload.png" alt="alt text"></p>
+<ol>
+<li>
+<p><strong>Upload Modal Opens</strong>:</p>
+<ul>
+<li>Drag &amp; drop YAML file</li>
+<li>Or click to browse files</li>
+</ul>
+</li>
+<li>
+<p><strong>File Validation</strong>:</p>
+<ul>
+<li>System validates YAML syntax</li>
+<li>Shows preview of rules to import</li>
+<li>Displays count and any errors</li>
+</ul>
+</li>
+<li>
+<p><strong>Confirm Import</strong>:</p>
+<ul>
+<li>Review rules to be imported</li>
+<li>Click <strong>Import</strong> to add rules</li>
+<li>Success message shows number of rules imported</li>
+</ul>
+</li>
+</ol>
+<h3 id="rule-detail-modal">Rule Detail Modal</h3>
+<p>Click a rule row to view complete information in read-only mode.</p>
+<p><img src="Documentation Screenshots/Rule Details.png" alt="alt text"></p>
+<p><strong>Modal Sections</strong>:</p>
+<ul>
+<li><strong>Header</strong> - Rule name and ID</li>
+<li><strong>Status</strong> - Enabled/disabled, severity, category</li>
+<li><strong>Description</strong> - Full rule description</li>
+<li><strong>Conditions</strong> - Visual display of all conditions</li>
+<li><strong>Tags</strong> - Associated tags</li>
+<li><strong>Metadata</strong> - Created/updated timestamps</li>
+</ul>
+<p><strong>Actions</strong>:</p>
+<ul>
+<li><strong>Edit</strong> - Switch to edit mode</li>
+<li><strong>Delete</strong> - Remove rule</li>
+<li><strong>Close</strong> - Close modal</li>
+</ul>
+<hr>
+<h2 id="feedback-history">Feedback History</h2>
+<p>View and manage user feedback submitted on detections to improve AI accuracy.</p>
+<p><img src="Documentation Screenshots/Feedback Mgmt page.png" alt="alt text"></p>
+<h3 id="page-header">Page Header</h3>
+<ul>
+<li><strong>Back Button (←)</strong> - Return to Configuration</li>
+<li><strong>Title &amp; Description</strong></li>
+</ul>
+<h3 id="search--filter">Search &amp; Filter</h3>
+<ul>
+<li><strong>Search Box</strong> - Search feedback comments</li>
+<li><strong>Filters Button</strong> - Toggle filter panel
+<ul>
+<li><strong>Is Helpful</strong> - Show only helpful/not helpful feedback</li>
+<li><strong>Feedback Type</strong> - Detection, Remediation, or Both</li>
+<li><strong>Date Range</strong> - Custom date filtering</li>
+</ul>
+</li>
+</ul>
+<h3 id="feedback-table">Feedback Table</h3>
+<h4 id="table-columns">Table Columns</h4>
+<table>
+<thead>
+<tr>
+<th>Column</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Detection</strong></td>
+<td>Associated detection title</td>
+</tr>
+<tr>
+<td><strong>Feedback Type</strong></td>
+<td>Detection/Remediation/Both</td>
+</tr>
+<tr>
+<td><strong>Is Helpful</strong></td>
+<td>Thumbs up/down indicator</td>
+</tr>
+<tr>
+<td><strong>Comments</strong></td>
+<td>User feedback text (truncated)</td>
+</tr>
+<tr>
+<td><strong>Created At</strong></td>
+<td>When feedback was submitted</td>
+</tr>
+<tr>
+<td><strong>Actions</strong></td>
+<td>View/Delete menu</td>
+</tr>
+</tbody>
+</table>
+<h4 id="table-features">Table Features</h4>
+<ul>
+<li><strong>Click Row</strong> - Opens feedback detail modal</li>
+<li><strong>Sort</strong> - Click headers to sort</li>
+<li><strong>Bulk Selection</strong> - Select multiple for bulk delete</li>
+<li><strong>Pagination</strong> - Navigate pages</li>
+</ul>
+<h3 id="feedback-detail-modal">Feedback Detail Modal</h3>
+<p><img src="Documentation Screenshots/Feedback Details.png" alt="alt text"></p>
+<p><strong>Information Shown</strong>:</p>
+<ul>
+<li><strong>Detection Title</strong> - Link to original detection</li>
+<li><strong>Feedback Type</strong> - What was rated</li>
+<li><strong>Helpful Status</strong> - User rating</li>
+<li><strong>Comments</strong> - Full user feedback text</li>
+<li><strong>Timestamps</strong> - When submitted</li>
+</ul>
+<p><strong>Actions</strong>:</p>
+<ul>
+<li><strong>View Detection</strong> - Opens the associated detection</li>
+<li><strong>Delete</strong> - Remove feedback</li>
+<li><strong>Close</strong> - Close modal</li>
+</ul>
+<h3 id="using-feedback-to-improve">Using Feedback to Improve</h3>
+<p>Feedback helps improve AI detection quality:</p>
+<ol>
+<li><strong>Review &quot;Not Helpful&quot; feedback</strong> regularly</li>
+<li><strong>Look for patterns</strong> - Multiple users reporting same issue</li>
+<li><strong>Update AI agent instructions</strong> based on feedback</li>
+<li><strong>Adjust detection thresholds</strong> if needed</li>
+<li><strong>Create rules</strong> for consistently misdetected patterns</li>
+</ol>
+<hr>
+<h2 id="ai-agent-instructions">AI Agent Instructions</h2>
+<p>Configure the prompts and behavior for the three AI agents that power detection, quality checking, and remediation.</p>
+<p><img src="Documentation Screenshots/AI agents Instruction Page.png" alt="alt text"></p>
+<h3 id="page-header">Page Header</h3>
+<ul>
+<li><strong>Back Button (←)</strong> - Return to Configuration</li>
+<li><strong>Title &amp; Description</strong></li>
+</ul>
+<h3 id="agent-tabs">Agent Tabs</h3>
+<p>Three tabs for the three AI agents:</p>
+<p><img src="Documentation Screenshots/Agents Tabs.png" alt="alt text"></p>
+<h4 id="1-detection-agent">1. Detection Agent</h4>
+<p><strong>Purpose</strong>: Analyzes logs to detect security threats</p>
+<p><strong>Tab Content</strong>:</p>
+<ul>
+<li><strong>System Instructions</strong> - Base prompt defining agent's role and behavior</li>
+<li><strong>User Instructions</strong> - Additional guidance for specific detection needs</li>
+<li><strong>Examples</strong> - Sample detections to guide AI (optional)</li>
+</ul>
+<p><strong>Configuration Options</strong>:</p>
+<ul>
+<li><strong>Instructions Text Area</strong> - Large text box for editing prompts</li>
+<li><strong>Reset to Defaults</strong> - Restore original instructions</li>
+<li><strong>Save Changes</strong> - Apply new instructions</li>
+</ul>
+<p><strong>Best Practices</strong>:</p>
+<ul>
+<li>Be specific about threat types to focus on</li>
+<li>Include your organization's security policies</li>
+<li>Add context about your environment</li>
+<li>Provide examples of past detections</li>
+</ul>
+<h4 id="2-quality-agent">2. Quality Agent</h4>
+<p><strong>Purpose</strong>: Validates detections and filters false positives</p>
+<p><strong>Tab Content</strong>:</p>
+<ul>
+<li><strong>System Instructions</strong> - Prompt for quality validation role</li>
+<li><strong>User Instructions</strong> - Criteria for false positive filtering</li>
+<li><strong>Validation Rules</strong> - Specific checks to perform</li>
+</ul>
+<p><strong>Configuration Options</strong>:</p>
+<ul>
+<li>Same as Detection Agent</li>
+<li><strong>Sensitivity Slider</strong> - Adjust false positive filtering (if available)</li>
+</ul>
+<p><strong>Best Practices</strong>:</p>
+<ul>
+<li>Define what constitutes a false positive</li>
+<li>Include known benign patterns</li>
+<li>Specify confidence thresholds</li>
+<li>List trusted processes/users</li>
+</ul>
+<h4 id="3-remediation-agent">3. Remediation Agent</h4>
+<p><strong>Purpose</strong>: Generates remediation plans for confirmed threats</p>
+<p><strong>Tab Content</strong>:</p>
+<ul>
+<li><strong>System Instructions</strong> - Prompt for remediation advisor role</li>
+<li><strong>User Instructions</strong> - Organization-specific response procedures</li>
+<li><strong>Response Templates</strong> - Structured remediation guidance</li>
+</ul>
+<p><strong>Configuration Options</strong>:</p>
+<ul>
+<li>Same as other agents</li>
+<li><strong>Response Format</strong> - Template for remediation structure</li>
+</ul>
+<p><strong>Best Practices</strong>:</p>
+<ul>
+<li>Include your incident response procedures</li>
+<li>Reference specific security tools you use</li>
+<li>Mention compliance requirements</li>
+<li>Define escalation procedures</li>
+<li>Specify automated responses available</li>
+</ul>
+<h3 id="editing-agent-instructions">Editing Agent Instructions</h3>
+<ol>
+<li><strong>Click into Text Area</strong> - Cursor appears</li>
+<li><strong>Edit Text</strong> - Modify instructions as needed</li>
+<li><strong>Preview</strong> (if available) - See how changes affect output</li>
+<li><strong>Save Changes</strong> - Apply to agent</li>
+<li><strong>Test</strong> - Create test detection to verify behavior</li>
+</ol>
+<p><strong>Saving Behavior</strong>:</p>
+<ul>
+<li>Changes apply immediately to new detections</li>
+<li>Existing detections are not affected</li>
+<li>Can revert with &quot;Reset to Defaults&quot;</li>
+</ul>
+<hr>
+<h2 id="common-components">Common Components</h2>
+<p>These components appear throughout the application.</p>
+<h3 id="command-palette">Command Palette</h3>
+<p>Press <strong>Ctrl+K</strong> (Windows/Linux) or <strong>Cmd+K</strong> (Mac), or click search icon in navbar.</p>
+<p><img src="Documentation Screenshots/Command Palette.png" alt="alt text"></p>
+<p><strong>Features</strong>:</p>
+<ul>
+<li><strong>Quick Navigation</strong> - Type to filter pages</li>
+<li><strong>Keyboard Navigation</strong> - Arrow keys to select, Enter to navigate</li>
+<li><strong>Recent Pages</strong> - Shows your recent navigation</li>
+<li><strong>Actions</strong> - Quick access to common actions</li>
+</ul>
+<p><strong>Example Usage</strong>:</p>
+<ul>
+<li>Type &quot;rules&quot; → Navigate to Rule Management</li>
+<li>Type &quot;dashboard&quot; → Return to Dashboard</li>
+<li>Type &quot;critical&quot; → Filter to critical detections</li>
+</ul>
+<h3 id="notification-sidebar">Notification Sidebar</h3>
+<p>Click the bell icon in navbar to open.</p>
+<p><img src="Documentation Screenshots/Notification sidebar.png" alt="alt text"></p>
+<p><strong>Features</strong>:</p>
+<ul>
+<li><strong>Recent Notifications</strong> - New detections, system alerts</li>
+<li><strong>Unread Count</strong> - Red badge on bell icon</li>
+<li><strong>Mark as Read</strong> - Click notification to mark read</li>
+<li><strong>Clear All</strong> - Button to clear all notifications</li>
+<li><strong>Auto-Hide</strong> - Click outside to close</li>
+</ul>
+<p><strong>Notification Types</strong>:</p>
+<ul>
+<li><strong>New Detection</strong> - AI detected a threat</li>
+<li><strong>Rule Triggered</strong> - Security rule matched</li>
+<li><strong>System Alert</strong> - Configuration issues, errors</li>
+<li><strong>Status Update</strong> - Detection status changed</li>
+</ul>
+<h3 id="modals">Modals</h3>
+<p>Modals are overlay windows that focus attention on specific content.</p>
+<p><strong>Features</strong>:</p>
+<ul>
+<li><strong>Backdrop</strong> - Darkened background</li>
+<li><strong>Close Options</strong>:
+<ul>
+<li>Click X button</li>
+<li>Click outside modal</li>
+<li>Press Escape key</li>
+</ul>
+</li>
+<li><strong>Actions</strong> - Usually at bottom (Cancel, Save, etc.)</li>
+<li><strong>Tabs</strong> (in detail modals) - Switch between sections</li>
+</ul>
+<h3 id="tables">Tables</h3>
+<p>Tables are used throughout for displaying lists.</p>
+<p><strong>Common Features</strong>:</p>
+<ul>
+<li><strong>Sorting</strong> - Click column headers</li>
+<li><strong>Pagination</strong> - Navigate pages at bottom</li>
+<li><strong>Row Selection</strong> - Checkboxes for bulk actions</li>
+<li><strong>Row Click</strong> - Opens detail view</li>
+<li><strong>Action Menu</strong> - Three-dot menu per row</li>
+<li><strong>Empty State</strong> - Helpful message when no data</li>
+</ul>
+<h3 id="export-modals">Export Modals</h3>
+<p>Common pattern for exporting data.</p>
+<p><strong>Options</strong>:</p>
+<ul>
+<li><strong>Format Selection</strong> - CSV, JSON, Markdown, HTML</li>
+<li><strong>Filter Options</strong> - Use current filters or customize</li>
+<li><strong>Date Range</strong> - Specific time period</li>
+<li><strong>Preview</strong> - See what will be exported</li>
+<li><strong>Download</strong> - Generate and download file</li>
+</ul>
+<hr>
+<h2 id="keyboard-shortcuts">Keyboard Shortcuts</h2>
+<p>Speed up your workflow with keyboard shortcuts:</p>
+<table>
+<thead>
+<tr>
+<th>Shortcut</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Ctrl/Cmd + K</strong></td>
+<td>Open Command Palette</td>
+</tr>
+<tr>
+<td><strong>Escape</strong></td>
+<td>Close modal/panel</td>
+</tr>
+<tr>
+<td><strong>Ctrl/Cmd + /</strong></td>
+<td>Focus search box</td>
+</tr>
+<tr>
+<td><strong>?</strong></td>
+<td>Show help (if available)</td>
+</tr>
+<tr>
+<td><strong>Arrow Keys</strong></td>
+<td>Navigate tables and lists</td>
+</tr>
+<tr>
+<td><strong>Enter</strong></td>
+<td>Open selected item</td>
+</tr>
+<tr>
+<td><strong>Tab</strong></td>
+<td>Navigate form fields</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="tips--best-practices">Tips &amp; Best Practices</h2>
+<h3 id="for-security-analysts">For Security Analysts</h3>
+<ol>
+<li>
+<p><strong>Start Your Day on Dashboard</strong></p>
+<ul>
+<li>Review the four key metrics</li>
+<li>Check for critical alerts</li>
+<li>Scan recent detections table</li>
+</ul>
+</li>
+<li>
+<p><strong>Use Filters Effectively</strong></p>
+<ul>
+<li>Save time with the Filters panel</li>
+<li>Combine multiple filters (severity + status + date)</li>
+<li>Use search for specific IOCs</li>
+</ul>
+</li>
+<li>
+<p><strong>Provide Feedback</strong></p>
+<ul>
+<li>Help improve detection accuracy</li>
+<li>Always add comments explaining your feedback</li>
+<li>Review feedback regularly in Feedback History</li>
+</ul>
+</li>
+<li>
+<p><strong>Status Management</strong></p>
+<ul>
+<li>Keep detections organized with proper statuses</li>
+<li>Add notes when changing status</li>
+<li>Mark false positives to train AI</li>
+</ul>
+</li>
+<li>
+<p><strong>Export Reports</strong></p>
+<ul>
+<li>Use Markdown format for documentation</li>
+<li>Use CSV for spreadsheet analysis</li>
+<li>Use JSON for tool integration</li>
+</ul>
+</li>
+</ol>
+<h3 id="for-administrators">For Administrators</h3>
+<ol>
+<li>
+<p><strong>Configure AI Model First</strong></p>
+<ul>
+<li>System Settings → AI Model Configuration</li>
+<li>Test with small batch sizes initially</li>
+<li>Monitor API costs</li>
+</ul>
+</li>
+<li>
+<p><strong>Start with Polling Mode</strong></p>
+<ul>
+<li>More stable than realtime for most deployments</li>
+<li>Adjust polling interval based on log volume</li>
+<li>Switch to realtime only if needed</li>
+</ul>
+</li>
+<li>
+<p><strong>Use Log Grouping Wisely</strong></p>
+<ul>
+<li>Host-only grouping for simpler deployments</li>
+<li>Host+User+IP for multi-user systems</li>
+<li>Affects AI context and detection quality</li>
+</ul>
+</li>
+<li>
+<p><strong>Create Rules Gradually</strong></p>
+<ul>
+<li>Start with high-confidence rules</li>
+<li>Test rules individually before enabling</li>
+<li>Use upload YAML for bulk imports</li>
+</ul>
+</li>
+<li>
+<p><strong>Customize AI Agent Instructions</strong></p>
+<ul>
+<li>Tailor to your environment and threats</li>
+<li>Include your security policies</li>
+<li>Update based on feedback patterns</li>
+</ul>
+</li>
+<li>
+<p><strong>Monitor Performance</strong></p>
+<ul>
+<li>Check detection latency</li>
+<li>Review false positive rate</li>
+<li>Adjust batch size if needed</li>
+</ul>
+</li>
+</ol>
+<h3 id="general-tips">General Tips</h3>
+<ol>
+<li>
+<p><strong>Use Date Range Picker</strong></p>
+<ul>
+<li>Essential for focused analysis</li>
+<li>Use presets (Today, Last 7 days) for speed</li>
+<li>Custom ranges for specific incidents</li>
+</ul>
+</li>
+<li>
+<p><strong>Click Around Safely</strong></p>
+<ul>
+<li>All detail views are read-only unless explicitly editing</li>
+<li>Delete actions always require confirmation</li>
+<li>Unsaved changes show warning before leaving</li>
+</ul>
+</li>
+<li>
+<p><strong>Bulk Actions Save Time</strong></p>
+<ul>
+<li>Select multiple detections to update status</li>
+<li>Bulk trigger detection on logs</li>
+<li>Bulk delete feedback</li>
+</ul>
+</li>
+<li>
+<p><strong>Keep Browser Updated</strong></p>
+<ul>
+<li>Use modern browsers (Chrome, Firefox, Edge, Safari)</li>
+<li>Enable JavaScript</li>
+<li>Allow notifications for real-time alerts</li>
+</ul>
+</li>
+<li>
+<p><strong>Mobile Usage</strong></p>
+<ul>
+<li>Full functionality on tablets</li>
+<li>Limited on phones (use desktop for detailed work)</li>
+<li>Hamburger menu (☰) for navigation</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h2 id="troubleshooting">Troubleshooting</h2>
+<h3 id="common-issues">Common Issues</h3>
+<h4 id="%22no-data-available%22">&quot;No data available&quot;</h4>
+<p><strong>Cause</strong>: No logs ingested or date range has no data</p>
+<p><strong>Solution</strong>:</p>
+<ul>
+<li>Check if logs are being ingested (ask admin)</li>
+<li>Adjust date range to include known log activity</li>
+<li>Verify data source connections</li>
+</ul>
+<h4 id="%22failed-to-load%22">&quot;Failed to load&quot;</h4>
+<p><strong>Cause</strong>: Backend API not responding</p>
+<p><strong>Solution</strong>:</p>
+<ul>
+<li>Check if backend is running</li>
+<li>Verify network connection</li>
+<li>Check browser console for errors</li>
+<li>Contact system administrator</li>
+</ul>
+<h4 id="detection-not-appearing">Detection not appearing</h4>
+<p><strong>Cause</strong>: AI hasn't processed yet or polling interval not reached</p>
+<p><strong>Solution</strong>:</p>
+<ul>
+<li>Wait for next polling cycle</li>
+<li>Check System Settings for polling interval</li>
+<li>Manually trigger detection on specific logs</li>
+</ul>
+<h4 id="chart-shows-no-data">Chart shows no data</h4>
+<p><strong>Cause</strong>: No data for selected grouping or filters too restrictive</p>
+<p><strong>Solution</strong>:</p>
+<ul>
+<li>Change chart grouping (use three-dot menu)</li>
+<li>Adjust or clear filters</li>
+<li>Expand date range</li>
+</ul>
+<h3 id="getting-help">Getting Help</h3>
+<p>If you encounter issues:</p>
+<ol>
+<li><strong>Check System Settings</strong> - Ensure AI model is configured</li>
+<li><strong>Review Notifications</strong> - System may show error alerts</li>
+<li><strong>Check Browser Console</strong> - Press F12 to see errors</li>
+<li><strong>Contact Administrator</strong> - Provide error messages and screenshots</li>
+</ol>
+<hr>
+<h2 id="conclusion">Conclusion</h2>
+<p>The AI-Security Platform provides a powerful, intuitive interface for security log analysis and threat detection. By following this guide, you should be able to:</p>
+<ul>
+<li>Navigate all sections of the platform</li>
+<li>Analyze logs and detections effectively</li>
+<li>Configure rules and AI settings</li>
+<li>Provide feedback to improve detection accuracy</li>
+<li>Export reports and data as needed</li>
+</ul>
+<p>For technical setup and deployment information, see the <a href="./as-deployment-guide.md">Deployment Guide</a>.</p>
+<p>For API integration and development, see the <a href="./as-api-reference.md">API Reference</a>.</p>
+<hr>
+<p><strong>Last Updated</strong>: November 2024<br>
+<strong>Version</strong>: 1.0.0</p>
+
+</body>
+</html>

@@ -1,0 +1,6 @@
+[submodule "Log-Transformer"]
+	path = Log-Transformer
+	url = https://github.com/Elie-Saliba/log-transformer.git
+[submodule "ai-security"]
+	path = ai-security
+	url = https://github.com/Elie-Saliba/AI-log-anaomaly-detection.git
