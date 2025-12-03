@@ -37,6 +37,47 @@ The `Appendices/` directory contains shared documentation, guides, and reference
 
 ## 🚀 Getting Started
 
+### Quick Start - AI Security Platform
+
+The AI Security platform features **zero-configuration Docker startup**!
+
+#### Windows
+```bash
+cd ai-security
+start.bat
+```
+
+#### Linux/Mac
+```bash
+cd ai-security
+./start.sh
+```
+
+#### Or use Docker directly
+```bash
+cd ai-security
+docker-compose up -d --build
+```
+
+**What happens automatically:**
+- ✅ `.env` file is auto-created from `.env.example` if missing
+- ✅ Database initialized with required schema
+- ✅ All services start in correct order with health checks
+- ✅ MCP servers started for Detection, Advisor, and Quality agents
+
+**Access the Application:**
+- Frontend UI: http://localhost:8080
+- Backend API: http://localhost:3000
+- API Health: http://localhost:3000/health
+- Database: localhost:5432 (postgres/TestDb123)
+
+**Stop Services:**
+```bash
+cd ai-security
+docker-compose down        # Stop services
+docker-compose down -v     # Stop and remove all data
+```
+
 ### Clone with Submodules
 
 To clone this repository with all submodules:
