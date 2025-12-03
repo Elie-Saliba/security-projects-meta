@@ -77,6 +77,18 @@ Both startup scripts automatically:
 - **API Base:** http://localhost:5001
 - **Uploads Directory:** `Log-Transformer/uploads`
 
+## Initial Configuration
+
+### First-Time Model Provider Setup
+
+When you access the AI Security frontend for the first time, you'll be prompted to configure a model provider. Use the following settings for testing:
+
+- **Model Provider:** OpenAI
+- **API Key:** (can be shared on demand)
+- **Model:** gpt-5
+
+This configuration enables the AI detection and analysis features.
+
 ## Verifying Deployment
 
 Check all containers are running:
