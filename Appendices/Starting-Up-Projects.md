@@ -7,6 +7,32 @@ This guide explains how to deploy the AI Security and Log-Transformer projects u
 - Docker Desktop installed and running
 - Git (to clone repositories)
 
+## Repository Structure
+
+This meta repository contains two main projects as Git submodules:
+
+### ai-security/
+The **AI Security Platform** - An intelligent log analysis system that uses AI agents to detect security threats and anomalies in log data. It provides a web-based frontend for visualization and management, and includes MCP (Model Context Protocol) servers for AI-powered analysis.
+
+- **Location:** `security-projects-meta/ai-security/`
+- **GitHub:** https://github.com/Elie-Saliba/AI-log-anaomaly-detection
+- **Key Components:**
+  - Frontend (React/TypeScript)
+  - Backend API (Node.js)
+  - PostgreSQL Database
+  - Three MCP Servers (Detection, Advisor, Quality)
+
+### Log-Transformer/
+The **Log-Transformer API** - A .NET application that processes and transforms Windows Event Logs (.evtx files) into structured data. It automatically ingests logs from the uploads directory and stores them in the database for analysis by the AI Security Platform.
+
+- **Location:** `security-projects-meta/Log-Transformer/`
+- **GitHub:** https://github.com/Elie-Saliba/log-transformer
+- **Key Components:**
+  - .NET 8.0 API
+  - Windows Event Log Parser
+  - Swagger UI for API testing
+  - Automatic file processing from uploads directory
+
 ## Important: Deployment Order
 
 **AI Security must be deployed first** because it contains the shared PostgreSQL database that Log-Transformer connects to in integrated mode.
