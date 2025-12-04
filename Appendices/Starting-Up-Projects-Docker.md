@@ -1,11 +1,15 @@
-# Starting Up Security Projects
+# Starting Up Security Projects (Docker Deployment)
 
 This guide explains how to deploy the AI Security and Log-Transformer projects using Docker.
 
 ## Prerequisites
 
+**Required for Docker deployment:**
 - Docker Desktop installed and running
+- Docker Compose (included with Docker Desktop)
 - Git (to clone repositories)
+- At least 4GB RAM allocated to Docker
+- Ports available: 3000, 5001, 5432, 8080
 
 ## Repository Structure
 
