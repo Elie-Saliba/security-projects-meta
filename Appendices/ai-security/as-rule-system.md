@@ -5,6 +5,7 @@ Complete guide to the YAML-based security rule engine.
 ## Table of Contents
 
 - [Overview](#overview)
+- [Rule Editor Interface](#rule-editor-interface)
 - [Rule Structure](#rule-structure)
 - [Rule Schema](#rule-schema)
 - [Condition Operators](#condition-operators)
@@ -29,6 +30,77 @@ graph LR
 ```
 
 **Location**: `packages/core/src/rules/rules/*.yaml`
+
+## Rule Editor Interface
+
+The Rule Editor Modal provides a user-friendly interface for creating and editing security rules without manually writing YAML.
+
+```mermaid
+graph TD
+    Start([Open Rule Editor]) --> Form[Rule Configuration Form]
+    
+    Form --> Basic[Basic Information]
+    Form --> Framework[Framework Mappings]
+    Form --> Filters[Applicability Filters]
+    Form --> Logic[Detection Logic]
+    Form --> AI[AI Configuration]
+    Form --> Meta[Metadata]
+    
+    Basic --> |Required|BasicFields["Rule ID<br/>Name<br/>Category<br/>Severity"]
+    
+    Framework --> |Optional|FrameworkFields["MITRE Tactics<br/>MITRE Techniques<br/>OWASP Category"]
+    
+    Filters --> |Required|FilterFields["Sources<br/>Event Types"]
+    
+    Logic --> |Required|LogicBuilder["Condition Builder<br/>Add Conditions<br/>AND/OR Groups<br/>Operators"]
+    
+    AI --> |Optional|AIFields["Enable AI Analysis<br/>Analysis Prompt<br/>Context Fields"]
+    
+    Meta --> |Required|MetaFields["Description<br/>References"]
+    
+    BasicFields --> Validate{Validation}
+    FrameworkFields --> Validate
+    FilterFields --> Validate
+    LogicBuilder --> Validate
+    AIFields --> Validate
+    MetaFields --> Validate
+    
+    Validate -->|Valid| Preview[Preview YAML]
+    Validate -->|Invalid| Error[Show Errors]
+    
+    Error --> Form
+    Preview --> Save{Save Rule?}
+    
+    Save -->|Yes| Export[Save to YAML File]
+    Save -->|Cancel| Close[Close Editor]
+    
+    Export --> Success[Rule Created/Updated]
+    
+    style Start fill:#e1f5ff
+    style Form fill:#fff3cd
+    style Basic fill:#d4edda
+    style Framework fill:#d4edda
+    style Filters fill:#d4edda
+    style Logic fill:#d4edda
+    style AI fill:#d4edda
+    style Meta fill:#d4edda
+    style Validate fill:#f8d7da
+    style Preview fill:#d1ecf1
+    style Success fill:#c3e6cb
+```
+
+**Rule Editor Features:**
+
+The Rule Editor Modal simplifies rule creation by breaking down the complex YAML structure into organized sections:
+
+- **Basic Information** - Essential rule identifiers and classification (Rule ID, Name, Category, Severity)
+- **Framework Mappings** - Link to MITRE ATT&CK tactics/techniques and OWASP categories
+- **Applicability Filters** - Define which log sources and event types to monitor
+- **Detection Logic** - Visual condition builder with AND/OR logic groups and multiple operators
+- **AI Configuration** - Enable AI validation with custom prompts and context fields
+- **Metadata** - Rule description and security resource references
+
+The editor validates inputs in real-time and provides a YAML preview before saving.
 
 ## Rule Structure
 

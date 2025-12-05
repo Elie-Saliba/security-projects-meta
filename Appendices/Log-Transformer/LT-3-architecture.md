@@ -97,6 +97,51 @@ Log-Transformer is a modular, plugin-based log ingestion and normalization platf
           └──────────────────────┘
 ```
 
+## Log Transformer CLI with Active Parsers
+
+```mermaid
+graph TB
+    Start([Log Transformer CLI Started]) --> Registry[Parser Registry Initialized]
+    
+    Registry --> Parser1[📄 EVTX Parser<br/>Windows Event Logs]
+    Registry --> Parser2[📋 JSONL Parser<br/>JSON Line Files]
+    Registry --> Parser3[🔧 FluentBit Parser<br/>Real-time Streams]
+    Registry --> Parser4[🛡️ Wazuh Parser<br/>Security Alerts]
+    Registry --> Parser5[📡 Syslog Parser<br/>System Logs]
+    
+    Parser1 -.->|Ready| Status[✅ All Parsers Active]
+    Parser2 -.->|Ready| Status
+    Parser3 -.->|Ready| Status
+    Parser4 -.->|Ready| Status
+    Parser5 -.->|Ready| Status
+    
+    Status --> Worker[Background Worker Running]
+    Worker --> Monitor[Monitoring for New Logs]
+    
+    style Start fill:#e1f5ff
+    style Registry fill:#fff3cd
+    style Parser1 fill:#d4edda
+    style Parser2 fill:#d4edda
+    style Parser3 fill:#d4edda
+    style Parser4 fill:#d4edda
+    style Parser5 fill:#d4edda
+    style Status fill:#d1ecf1
+    style Worker fill:#f8d7da
+    style Monitor fill:#e2e3e5
+```
+
+**What This Diagram Shows:**
+
+When the Log Transformer starts up, it initializes five different "translators" (parsers) that each understand a different type of log format:
+
+- **EVTX Parser**: Reads Windows Event Log files
+- **JSONL Parser**: Reads JSON formatted log files
+- **FluentBit Parser**: Accepts real-time log streams from FluentBit
+- **Wazuh Parser**: Accepts security alerts from Wazuh
+- **Syslog Parser**: Reads standard system log messages
+
+Once all parsers are ready, the background worker starts monitoring for new logs to process. This ensures the system can handle any type of log file or stream that arrives.
+
 ## Core Components
 
 ### 1. API Layer

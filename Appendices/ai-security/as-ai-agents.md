@@ -588,6 +588,89 @@ Patterns stored from user feedback:
 }
 ```
 
+### Feedback Submission and Learning
+
+The feedback system enables continuous improvement through analyst input and automated pattern learning:
+
+```mermaid
+graph TD
+    Start([Analyst Reviews Detection]) --> Decision{Is Detection<br/>Helpful?}
+    
+    Decision -->|Helpful| HelpfulBtn[Click Helpful Button]
+    Decision -->|Not Helpful| NotHelpfulBtn[Click Not Helpful Button]
+    
+    HelpfulBtn --> PositiveFeedback[Record Positive Feedback]
+    NotHelpfulBtn --> FeedbackForm[Open Feedback Modal]
+    
+    FeedbackForm --> SelectCategory[Select Category:<br/>False Positive, Insufficient Context,<br/>Incorrect Severity, Rule Too Sensitive]
+    SelectCategory --> AddComment[Add Optional Comment]
+    
+    AddComment --> Submit[Submit Feedback]
+    PositiveFeedback --> SaveDB[(Save to Database)]
+    Submit --> SaveDB
+    
+    SaveDB --> Aggregate[Periodic Pattern Aggregation]
+    Aggregate --> Analyze{Analyze Patterns}
+    
+    Analyze --> ExtractCommon[Extract Common Indicators]
+    ExtractCommon --> CreatePattern[Create/Update Pattern]
+    CreatePattern --> PatternDB[(Feedback Patterns DB)]
+    
+    PatternDB --> QualityAgent[QualityAgent Loads Patterns]
+    QualityAgent --> NextDetection[Evaluate Next Detection]
+    NextDetection --> Compare{Matches Pattern?}
+    
+    Compare -->|Yes| AutoFilter[Auto-Filter Detection]
+    Compare -->|No| SendToAnalyst[Send to Analyst]
+    
+    AutoFilter --> Learning[Continuous Learning Loop]
+    SendToAnalyst --> Learning
+    Learning -.-> Start
+    
+    style Start fill:#e1f5ff
+    style FeedbackForm fill:#fff3cd
+    style SaveDB fill:#d4edda
+    style PatternDB fill:#d4edda
+    style QualityAgent fill:#f8d7da
+    style AutoFilter fill:#c3e6cb
+    style Learning fill:#d1ecf1
+```
+
+**How Feedback Learning Works:**
+
+1. **Analyst Feedback Collection**
+   - Simple helpful/not helpful buttons for quick feedback
+   - Detailed feedback modal for not helpful detections
+   - Structured categories help identify specific issues
+   - Optional comments capture analyst reasoning
+
+2. **Pattern Aggregation (Hourly)**
+   - System analyzes all recent feedback submissions
+   - Identifies recurring patterns across multiple feedbacks
+   - Extracts common characteristics (IPs, users, hosts, field values)
+   - Creates or updates feedback patterns with confidence scores
+
+3. **Quality Agent Integration**
+   - QualityAgent loads learned patterns via MCP tools
+   - Compares new detections against known false positive patterns
+   - Auto-filters matching detections (76% accuracy)
+   - Novel patterns pass through for analyst review
+
+4. **Continuous Improvement**
+   - Each feedback refines pattern matching
+   - False positive rate decreases over time
+   - System adapts to organization-specific environments
+   - Reduces analyst workload through automated filtering
+
+**Feedback Categories:**
+
+- **False Positive** - Benign activity incorrectly flagged as threat
+- **Insufficient Context** - Needs additional correlation with other events
+- **Incorrect Severity** - Threat level assessment is wrong
+- **Rule Too Sensitive** - Detection triggers too frequently on normal activity
+
+
+
 ### Prompt Structure
 
 **System Prompt**:
