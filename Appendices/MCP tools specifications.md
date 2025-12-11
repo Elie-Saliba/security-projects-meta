@@ -12,6 +12,68 @@ Three MCP servers run alongside the backend:
 - **Advisor MCP** – remediation recommendations and MITRE mappings.
 - **Quality MCP** – feedback pattern retrieval and updates.
 
+**Figure H.0: Model Context Protocol Tool Integration**
+
+```mermaid
+graph TB
+    subgraph Agents["AI Agents (Codex SDK)"]
+        subgraph AgentsSub[" "]
+        DA[DetectionAgent<br/>Thread ID: det-xxx<br/>Workspace: detection/]
+        AA[AdvisorAgent<br/>Thread ID: adv-xxx<br/>Workspace: advisor/]
+        QA[QualityAgent<br/>Thread ID: qual-xxx<br/>Workspace: quality/]
+        end
+    end
+    
+    subgraph MCP["MCP Servers (HTTP Transport)"]
+        subgraph MCPSub[" "]
+        MCP1[Detection MCP<br/>Port 3100<br/>Session Management]
+        MCP2[Advisor MCP<br/>Port 3101<br/>Session Management]
+        MCP3[Quality MCP<br/>Port 3102<br/>Session Management]
+        end
+    end
+    
+    subgraph Tools["Tool Catalog"]
+        subgraph ToolsSub[" "]
+        T1[query_related_logs<br/>query_log_patterns<br/>get_log_statistics]
+        T2[query_similar_detections<br/>lookup_mitre_technique<br/>lookup_owasp_category<br/>search_remediation_refs]
+        T3[search_feedback_history<br/>query_fp_patterns<br/>get_feedback_for_rule]
+        end
+    end
+    
+    subgraph Data["Data Sources"]
+        subgraph DataSub[" "]
+        DB[(PostgreSQL<br/>normalized_logs<br/>detections<br/>feedbacks)]
+        MITRE[MITRE ATT&CK<br/>Knowledge Base]
+        OWASP[OWASP Top 10<br/>Documentation]
+        FB[Feedback History<br/>Markdown Files]
+        end
+    end
+    
+    DA -->|HTTP/JSON-RPC| MCP1
+    AA -->|HTTP/JSON-RPC| MCP2
+    QA -->|HTTP/JSON-RPC| MCP3
+    
+    MCP1 --> T1
+    MCP2 --> T2
+    MCP3 --> T3
+    
+    T1 --> DB
+    T2 --> DB
+    T2 --> MITRE
+    T2 --> OWASP
+    T3 --> DB
+    T3 --> FB
+    
+    style DA fill:#007EF9,color:#fff
+    style AA fill:#007EF9,color:#fff
+    style QA fill:#007EF9,color:#fff
+    style MCP1 fill:#28a745,color:#fff
+    style MCP2 fill:#28a745,color:#fff
+    style MCP3 fill:#28a745,color:#fff
+```
+
+
+
 **Figure H.1 - MCP Tool Integration Architecture**
 
 ```mermaid
