@@ -1,146 +1,129 @@
-# Architecture
+# Appendix F-2.4 — Log-Transformer Architecture
 
 ## Overview
 
 Log-Transformer is a modular, plugin-based log ingestion and normalization platform designed for scalability, extensibility, and reliability. The architecture follows industry-standard patterns for data processing pipelines with emphasis on maintainability and performance.
 
-## System Architecture Diagram
+## F-2.4.1 System Architecture
 
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                         Data Sources                             │
-├──────────────┬──────────────┬──────────────┬────────────────────┤
-│  File Upload │   FluentBit  │    Wazuh     │   Syslog/Custom   │
-│   (.evtx,    │   (HTTP)     │   (HTTP)     │    (HTTP/Queue)   │
-│   .jsonl)    │              │              │                    │
-└──────┬───────┴──────┬───────┴──────┬───────┴──────┬─────────────┘
-       │              │              │              │
-       └──────────────┴──────────────┴──────────────┘
-                      │
-                      ▼
-       ┌──────────────────────────────────┐
-       │      API Layer (ASP.NET Core)    │
-       │  - Upload Endpoints              │
-       │  - Real-time Ingestion Endpoints │
-       │  - Job Status Endpoints          │
-       │  - Health Checks                 │
-       └────────────┬─────────────────────┘
-                    │
-       ┌────────────┴─────────────────┐
-       │                              │
-       ▼                              ▼
-┌────────────────┐          ┌───────────────────┐
-│  Job Queue     │          │  Immediate        │
-│  (Database)    │          │  Processing       │
-│  - File-based  │          │  - Real-time      │
-│    ingestion   │          │    streams        │
-└───────┬────────┘          └─────────┬─────────┘
-        │                             │
-        ▼                             │
-┌────────────────────────────┐        │
-│  Background Worker         │        │
-│  (IngestWorker)            │        │
-│  - Polls for queued jobs   │        │
-│  - Batch processing        │        │
-│  - Error handling/retry    │        │
-└──────────┬─────────────────┘        │
-           │                          │
-           └──────────┬───────────────┘
-                      │
-                      ▼
-           ┌──────────────────────┐
-           │  Parser Registry     │
-           │  - Plugin system     │
-           │  - Source detection  │
-           └──────────┬───────────┘
-                      │
-        ┌─────────────┼─────────────┐
-        │             │             │
-        ▼             ▼             ▼
-  ┌──────────┐  ┌──────────┐  ┌──────────┐
-  │  EVTX    │  │  JSONL   │  │  Custom  │
-  │  Parser  │  │  Parser  │  │  Parser  │
-  └────┬─────┘  └────┬─────┘  └────┬─────┘
-       │             │             │
-       └─────────────┴─────────────┘
-                     │
-                     ▼
-          ┌──────────────────────┐
-          │   Normalizer         │
-          │   - Field mapping    │
-          │   - Severity mapping │
-          │   - Timestamp norm   │
-          └──────────┬───────────┘
-                     │
-                     ▼
-          ┌──────────────────────┐
-          │   Batch Writer       │
-          │   - Bulk inserts     │
-          │   - Transaction mgmt │
-          └──────────┬───────────┘
-                     │
-                     ▼
-          ┌──────────────────────┐
-          │   PostgreSQL         │
-          │   - normalized_logs  │
-          │   - ingest_jobs      │
-          │   - JSONB storage    │
-          └──────────┬───────────┘
-                     │
-                     ▼
-          ┌──────────────────────┐
-          │   AI-Security        │
-          │   Analysis Platform  │
-          │   - ML Detection     │
-          │   - Correlation      │
-          │   - Visualization    │
-          └──────────────────────┘
+**Figure F-2.4.1 — Log-Transformer System Architecture**
+
+```mermaid
+flowchart TB
+  %% Data Sources
+  subgraph Sources["Data Sources"]
+    FileUpload[File Upload — EVTX and JSONL]
+    FluentBit[FluentBit HTTP]
+    Wazuh[Wazuh HTTP]
+    Syslog[Syslog or Custom HTTP or Queue]
+  end
+
+  %% API Layer
+  subgraph API["API Layer — ASP.NET Core"]
+    UploadEndpoints[Upload Endpoints]
+    RTIngest[Real-time Ingestion Endpoints]
+    JobStatus[Job Status Endpoints]
+    Health[Health Checks]
+  end
+
+  %% Processing Paths
+  subgraph Queue["Job Queue (Database)"]
+    FileJobs[File-based ingestion]
+  end
+
+  subgraph Immediate["Immediate Processing"]
+    RTStreams[Real-time Streams]
+  end
+
+  subgraph Worker["Background Worker (IngestWorker)"]
+    Poller[Polls for queued jobs]
+    BatchProc[Batch processing]
+    Retry[Error handling / retry]
+  end
+
+  subgraph Parsers["Parser Registry"]
+    Registry[Plugin system / Source detection]
+    EVTXParser[EVTX Parser]
+    JSONLParser[JSONL Parser]
+    CustomParser[Custom Parser]
+  end
+
+  subgraph Normalize["Normalizer"]
+    FieldMap[Field mapping]
+    SeverityMap[Severity mapping]
+    TimeNorm[Timestamp normalization]
+  end
+
+  subgraph Writer["Batch Writer"]
+    BulkInsert[Bulk inserts]
+    TxMgmt[Transaction management]
+  end
+
+  subgraph DB["PostgreSQL"]
+    NormLogs[(normalized_logs)]
+    IngestJobs[(ingest_jobs)]
+    Jsonb[JSONB storage]
+  end
+
+  subgraph AISec["AI-Security Analysis Platform"]
+    MLDetect[ML Detection]
+    Correlate[Correlation]
+    Visualize[Visualization]
+  end
+
+  %% Flows
+  FileUpload --> API
+  FluentBit --> API
+  Wazuh --> API
+  Syslog --> API
+
+  API --> Queue
+  API --> Immediate
+
+  Queue --> Worker
+  Immediate --> Normalize
+
+  Worker --> Registry
+  Registry --> EVTXParser
+  Registry --> JSONLParser
+  Registry --> CustomParser
+  EVTXParser --> Normalize
+  JSONLParser --> Normalize
+  CustomParser --> Normalize
+
+  Normalize --> Writer
+  Writer --> NormLogs
+  Queue --> IngestJobs
+
+  NormLogs --> AISec
 ```
 
-## Log Transformer CLI with Active Parsers
+## F-2.4.2 CLI with Active Parsers
+
+**Figure F-2.4.2 — Log-Transformer CLI and Active Parsers**
 
 ```mermaid
 graph TB
-    Start([Log Transformer CLI Started]) --> Registry[Parser Registry Initialized]
-    
-    Registry --> Parser1[📄 EVTX Parser<br/>Windows Event Logs]
-    Registry --> Parser2[📋 JSONL Parser<br/>JSON Line Files]
-    Registry --> Parser3[🔧 FluentBit Parser<br/>Real-time Streams]
-    Registry --> Parser4[🛡️ Wazuh Parser<br/>Security Alerts]
-    Registry --> Parser5[📡 Syslog Parser<br/>System Logs]
-    
-    Parser1 -.->|Ready| Status[✅ All Parsers Active]
-    Parser2 -.->|Ready| Status
-    Parser3 -.->|Ready| Status
-    Parser4 -.->|Ready| Status
-    Parser5 -.->|Ready| Status
-    
-    Status --> Worker[Background Worker Running]
-    Worker --> Monitor[Monitoring for New Logs]
-    
-    style Start fill:#e1f5ff
-    style Registry fill:#fff3cd
-    style Parser1 fill:#d4edda
-    style Parser2 fill:#d4edda
-    style Parser3 fill:#d4edda
-    style Parser4 fill:#d4edda
-    style Parser5 fill:#d4edda
-    style Status fill:#d1ecf1
-    style Worker fill:#f8d7da
-    style Monitor fill:#e2e3e5
+  Start([Log-Transformer CLI Started]) --> Registry[Parser Registry Initialized]
+
+  Registry --> ParserEVTX[EVTX Parser — Windows Event Logs]
+  Registry --> ParserJSONL[JSONL Parser — JSON Line Files]
+  Registry --> ParserFluentBit[FluentBit Parser — Real-time Streams]
+  Registry --> ParserWazuh[Wazuh Parser — Security Alerts]
+  Registry --> ParserSyslog[Syslog Parser — System Logs]
+
+  ParserEVTX -.->|Ready| Status[All Parsers Active]
+  ParserJSONL -.->|Ready| Status
+  ParserFluentBit -.->|Ready| Status
+  ParserWazuh -.->|Ready| Status
+  ParserSyslog -.->|Ready| Status
+
+  Status --> Worker[Background Worker Running]
+  Worker --> Monitor[Monitoring for New Logs]
 ```
 
-**What This Diagram Shows:**
-
-When the Log Transformer starts up, it initializes five different "translators" (parsers) that each understand a different type of log format:
-
-- **EVTX Parser**: Reads Windows Event Log files
-- **JSONL Parser**: Reads JSON formatted log files
-- **FluentBit Parser**: Accepts real-time log streams from FluentBit
-- **Wazuh Parser**: Accepts security alerts from Wazuh
-- **Syslog Parser**: Reads standard system log messages
-
-Once all parsers are ready, the background worker starts monitoring for new logs to process. This ensures the system can handle any type of log file or stream that arrives.
+### Notes
+At startup, the CLI initializes multiple parsers for common log formats and streaming inputs. When all parsers are active, the background worker monitors for new logs and processes them via the configured pipeline.
 
 ## Core Components
 
@@ -163,15 +146,13 @@ Once all parsers are ready, the background worker starts monitoring for new logs
 - OpenAPI/Swagger documentation
 
 **Endpoints Structure**:
-```
-/ingest/evtx          - File upload (legacy name, accepts all types)
-/ingest/fluentbit     - FluentBit real-time ingestion
-/ingest/wazuh         - Wazuh alert ingestion
-/ingest/syslog        - Syslog message ingestion
-/ingest/jobs/{id}     - Job status query
-/health               - Health check
-/swagger              - API documentation
-```
+`/ingest/evtx` — File upload (accepts all types)
+`/ingest/fluentbit` — FluentBit real-time ingestion
+`/ingest/wazuh` — Wazuh alert ingestion
+`/ingest/syslog` — Syslog message ingestion
+`/ingest/jobs/{id}` — Job status query
+`/health` — Health check
+`/swagger` — API documentation
 
 ### 2. Job Queue System
 
@@ -183,25 +164,22 @@ Once all parsers are ready, the background worker starts monitoring for new logs
 - Progress tracking
 - Retry capability
 
-**Job Lifecycle**:
-```
-queued → running → done/error
-```
+**Job Lifecycle**: `queued → running → done/error`
 
 **Schema**:
 ```sql
 CREATE TABLE ingest_jobs (
-    id VARCHAR(26) PRIMARY KEY,
-    source VARCHAR(50) NOT NULL,
-    filename VARCHAR(255) NOT NULL,
-    path VARCHAR(1024) NOT NULL,
-    status VARCHAR(50) NOT NULL,
-    inserted INTEGER DEFAULT 0,
-    skipped INTEGER DEFAULT 0,
-    error TEXT,
-    created_at TIMESTAMP NOT NULL,
-    started_at TIMESTAMP,
-    finished_at TIMESTAMP
+  id VARCHAR(26) PRIMARY KEY,
+  source VARCHAR(50) NOT NULL,
+  filename VARCHAR(255) NOT NULL,
+  path VARCHAR(1024) NOT NULL,
+  status VARCHAR(50) NOT NULL,
+  inserted INTEGER DEFAULT 0,
+  skipped INTEGER DEFAULT 0,
+  error TEXT,
+  created_at TIMESTAMP NOT NULL,
+  started_at TIMESTAMP,
+  finished_at TIMESTAMP
 );
 ```
 
@@ -215,12 +193,12 @@ CREATE TABLE ingest_jobs (
 - Single-threaded sequential processing (can be scaled horizontally)
 
 **Processing Flow**:
-1. Query for oldest queued job
-2. Update status to "running"
+1. Query oldest queued job
+2. Set status to "running"
 3. Resolve appropriate parser
 4. Stream and parse log file
-5. Batch normalize and insert records
-6. Update job status to "done" or "error"
+5. Normalize and insert records (batch)
+6. Update status to "done" or "error"
 7. Repeat
 
 **Error Handling**:
@@ -237,19 +215,19 @@ CREATE TABLE ingest_jobs (
 ```csharp
 public interface ILogIngestParser
 {
-    string SourceSystem { get; }
-    IAsyncEnumerable<NormalizedLog> ParseAsync(
-        IngestContext context, 
-        CancellationToken cancellationToken
-    );
+  string SourceSystem { get; }
+  IAsyncEnumerable<NormalizedLog> ParseAsync(
+    IngestContext context, 
+    CancellationToken cancellationToken
+  );
 }
 ```
 
 **Built-in Parsers**:
-- **EVTX Parser**: Windows Event Log files
+- EVTX Parser: Windows Event Log files
   - Platform-specific readers (Windows/Linux)
   - Cross-platform fallback using libraries
-- **JSONL Parser**: JSON Lines format
+- JSONL Parser: JSON Lines format
   - Streaming line-by-line parsing
   - Flexible schema mapping
 
@@ -262,15 +240,15 @@ public interface ILogIngestParser
 ```csharp
 public class SyslogParser : ILogIngestParser
 {
-    public string SourceSystem => "syslog";
+  public string SourceSystem => "syslog";
     
-    public async IAsyncEnumerable<NormalizedLog> ParseAsync(
-        IngestContext context, 
-        CancellationToken ct)
-    {
-        // Parse RFC3164 or RFC5424 format
-        // Yield normalized logs
-    }
+  public async IAsyncEnumerable<NormalizedLog> ParseAsync(
+    IngestContext context, 
+    CancellationToken ct)
+  {
+    // Parse RFC3164 or RFC5424 format
+    // Yield normalized logs
+  }
 }
 ```
 
@@ -279,11 +257,11 @@ public class SyslogParser : ILogIngestParser
 **Purpose**: Transform diverse log formats into a unified schema
 
 **Normalizer Operations**:
-- **Field Mapping**: Extract and map source-specific fields
-- **Severity Mapping**: Convert various severity levels to standard enum
-- **Timestamp Normalization**: Convert all timestamps to UTC
-- **Data Enrichment**: Add metadata (source, processed_at, etc.)
-- **JSON Serialization**: Store raw and normalized data as JSONB
+- Field mapping
+- Severity mapping
+- Timestamp normalization (UTC)
+- Data enrichment (source, processed_at, etc.)
+- JSON serialization (raw and normalized data as JSONB)
 
 **Severity Mapping Example**:
 ```csharp
@@ -320,8 +298,8 @@ public class SyslogParser : ILogIngestParser
   "channel": "security",
   "event_id": 4624,
   "additional_fields": {
-    "custom_field_1": "value1",
-    "custom_field_2": "value2"
+  "custom_field_1": "value1",
+  "custom_field_2": "value2"
   }
 }
 ```
@@ -339,7 +317,7 @@ public class SyslogParser : ILogIngestParser
 
 **Performance Benefits**:
 - Reduces database round trips
-- Improves throughput by 10-50x vs. individual inserts
+- Improves throughput by 10–50x vs. individual inserts
 - Lower CPU and I/O overhead
 - Better connection pool utilization
 
@@ -347,8 +325,8 @@ public class SyslogParser : ILogIngestParser
 ```json
 {
   "Import": {
-    "BatchSize": 1000,
-    "PollIntervalSeconds": 5
+  "BatchSize": 1000,
+  "PollIntervalSeconds": 5
   }
 }
 ```
@@ -358,27 +336,24 @@ public class SyslogParser : ILogIngestParser
 **ORM**: Entity Framework Core 8.0 with Npgsql
 
 **Design Decisions**:
-- **No Migrations**: Uses existing ai-security schema
-- **Explicit Mapping**: Manual column and type mappings
-- **Enum Support**: PostgreSQL enum type integration
-- **JSONB Support**: Native JSON storage and querying
+- No migrations (uses existing ai-security schema)
+- Explicit column and type mappings
+- Enum support (PostgreSQL enum types)
+- JSONB support (native JSON storage and querying)
 
 **Database Context**:
 ```csharp
 public class AppDbContext : DbContext
 {
-    public DbSet<IngestJob> IngestJobs { get; set; }
-    public DbSet<NormalizedLog> NormalizedLogs { get; set; }
+  public DbSet<IngestJob> IngestJobs { get; set; }
+  public DbSet<NormalizedLog> NormalizedLogs { get; set; }
     
-    protected override void OnModelCreating(ModelBuilder builder)
-    {
-        // Register PostgreSQL enums
-        builder.HasPostgresEnum<SeverityEnum>();
-        builder.HasPostgresEnum<LogStatusEnum>();
-        
-        // Configure mappings
-        // ...
-    }
+  protected override void OnModelCreating(ModelBuilder builder)
+  {
+    builder.HasPostgresEnum<SeverityEnum>();
+    builder.HasPostgresEnum<LogStatusEnum>();
+    // Configure mappings
+  }
 }
 ```
 
@@ -436,14 +411,14 @@ Data flows through stages: Upload → Queue → Parse → Normalize → Write
 ```yaml
 services:
   log-transformer-api:
-    replicas: 3
-    deploy:
-      mode: replicated
+  replicas: 3
+  deploy:
+    mode: replicated
   
   log-transformer-worker:
-    replicas: 5
-    deploy:
-      mode: replicated
+  replicas: 5
+  deploy:
+    mode: replicated
 ```
 
 ### Vertical Scaling
@@ -489,23 +464,23 @@ services:
 
 ### Throughput
 
-- **File Upload**: 10-50 MB/s per instance (network limited)
-- **Parsing**: 10,000-50,000 events/second (format dependent)
-- **Database Writes**: 5,000-10,000 inserts/second (batch optimized)
+- File Upload: 10–50 MB/s per instance (network limited)
+- Parsing: 10,000–50,000 events/second (format dependent)
+- Database Writes: 5,000–10,000 inserts/second (batch optimized)
 
 ### Latency
 
-- **Upload API**: < 100ms (file store time)
-- **Job Queue**: < 1 second (poll interval)
-- **Processing**: Varies by file size and complexity
-- **Real-time Endpoints**: < 50ms (direct write)
+- Upload API: < 100 ms (file store time)
+- Job Queue: < 1 second (poll interval)
+- Processing: Varies by file size and complexity
+- Real-time Endpoints: < 50 ms (direct write)
 
 ### Resource Usage
 
-- **Memory**: 512 MB - 2 GB per instance
-- **CPU**: 0.5 - 2 cores per instance
-- **Storage**: Varies by log retention policy
-- **Database Connections**: 5-20 per instance
+- Memory: 512 MB – 2 GB per instance
+- CPU: 0.5 – 2 cores per instance
+- Storage: Varies by log retention policy
+- Database Connections: 5–20 per instance
 
 ## Security Architecture
 
@@ -536,8 +511,8 @@ services:
 
 ```
 Client → API → Job Queue → Response (job_id)
-       ↓
-    File Storage
+     ↓
+  File Storage
 ```
 
 ### Asynchronous Integration (Background Processing)
@@ -556,8 +531,8 @@ External System → API Endpoint → Normalizer → Database
 
 ```
 Log-Transformer → PostgreSQL ← AI-Security
-                     ↓
-              normalized_logs
+           ↓
+        normalized_logs
 ```
 
 ## Technology Stack
@@ -576,37 +551,37 @@ Log-Transformer → PostgreSQL ← AI-Security
 
 ### Planned Improvements
 
-1. **Message Queue Integration**
+1. Message Queue Integration
    - RabbitMQ/Kafka for reliable message delivery
    - Better decoupling of components
    - Replay and retry capabilities
 
-2. **Microservices Split**
+2. Microservices Split
    - Separate API and Worker services
    - Independent scaling
    - Technology diversity (polyglot persistence)
 
-3. **Event Sourcing**
+3. Event Sourcing
    - Capture all state changes
    - Audit trail
    - Replay capabilities
 
-4. **CQRS Pattern**
+4. CQRS Pattern
    - Separate read and write models
    - Optimized query performance
    - Eventual consistency
 
-5. **Distributed Tracing**
+5. Distributed Tracing
    - OpenTelemetry integration
    - End-to-end request tracking
    - Performance monitoring
 
-6. **Circuit Breaker Pattern**
+6. Circuit Breaker Pattern
    - Prevent cascade failures
    - Graceful degradation
    - Automatic recovery
 
-7. **Service Mesh**
-   - Traffic management
-   - Security policies
-   - Observability
+7. Service Mesh
+  - Traffic management
+  - Security policies
+  - Observability
