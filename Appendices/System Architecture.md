@@ -1,6 +1,92 @@
+
+---
+
 # Appendix A - System Architecture Diagrams
 
 This appendix provides the complete set of architectural diagrams referenced throughout the project. They summarise the modular design, two-tier microservice structure, and end-to-end execution flows. All diagrams are expressed in Mermaid to remain consistent with the architectural documentation maintained in the Log-Transformer and AI-Security repositories.
+
+---
+
+## A.0 Two-Tier Microservices Architecture (Overview)
+
+This diagram provides a concise view of the two-tier microservices architecture, showing the separation between log ingestion (Log-Transformer) and hybrid detection (AI-Security), along with shared dependencies and data flows.
+
+```mermaid
+graph TB
+    subgraph Sources["Log Sources"]
+        EVTX[Windows EVTX]
+        SYSLOG[Syslog]
+        FB[FluentBit]
+        WAZUH[Wazuh]
+        JSON[JSON Logs]
+        IIS[IIS Logs]
+    end
+
+    subgraph LB["Load Balancer"]
+        NGINX[NGINX/HAProxy]
+    end
+
+    subgraph LT["Log-Transformer Tier (.NET 8.0)"]
+        API[Upload API]
+        PARSER[Parser Plugins]
+        NORM[Normalizer]
+        BATCH[Batch Writer]
+        WORKER[Background Worker]
+    end
+
+    subgraph DB["Shared Database Layer"]
+        PG[(PostgreSQL 16\nnormalized_logs\ndetections\nfeedback_patterns)]
+        REPLICA[(Read Replica)]
+    end
+
+    subgraph AS["AI-Security Tier (Node.js 18+)"]
+        LISTEN[Log Listener]
+        RULES[Rule Engine]
+        DETECT[DetectionAgent]
+        ADVISOR[AdvisorAgent]
+        QUALITY[QualityAgent]
+        WEBAPP[Web UI]
+        WS[WebSocket]
+    end
+
+    subgraph EXT["External Services"]
+        LLM[LLM Providers]
+        MITRE[MITRE ATT&CK]
+        OWASP[OWASP]
+    end
+
+    %% Data Flow Connections
+    EVTX --> NGINX
+    SYSLOG --> NGINX
+    FB --> NGINX
+    WAZUH --> NGINX
+    JSON --> NGINX
+    IIS --> NGINX
+
+    NGINX --> API
+    API --> PARSER
+    PARSER --> NORM
+    NORM --> BATCH
+    BATCH --> WORKER
+    WORKER --> PG
+
+    PG --> REPLICA
+    PG -.-> LISTEN
+    LISTEN --> RULES
+    RULES --> DETECT
+    DETECT --> ADVISOR
+    ADVISOR --> QUALITY
+    QUALITY --> PG
+    QUALITY --> WS
+    WS --> WEBAPP
+
+    %% MCP / External Connections
+    DETECT -.-> LLM
+    ADVISOR -.-> LLM
+    QUALITY -.-> LLM
+    ADVISOR -.-> MITRE
+    ADVISOR -.-> OWASP
+```
 
 ---
 
