@@ -183,3 +183,69 @@ stateDiagram-v2
     Suppressed --> [*]
     Closed --> [*]
 ```
+
+**Figure E.7: Detection Lifecycle Sequence with Latency Analysis**
+
+```mermaid
+sequenceDiagram
+    participant DB as PostgreSQL<br/>Database
+    participant LL as LogListener<br/>LISTEN/NOTIFY
+    participant DP as Detection<br/>Pipeline
+    participant RE as RuleEngine<br/>Pattern Match
+    participant DA as DetectionAgent<br/>AI Validation
+    participant AA as AdvisorAgent<br/>Remediation
+    participant QA as QualityAgent<br/>False Positive Filter
+    participant WS as WebSocket<br/>EventBroadcaster
+    participant UI as Frontend<br/>Analyst Dashboard
+    
+    Note over DB,UI: Complete Detection Lifecycle (Target: <5 seconds)
+    
+    DB->>LL: NOTIFY new_log_inserted
+    Note right of LL: <50ms<br/>Real-time trigger
+    
+    LL->>DP: Process new log batch
+    Note right of DP: <100ms<br/>Grouping & routing
+    
+    DP->>RE: Evaluate against rules
+    Note right of RE: ~800ms<br/>YAML rule matching<br/>MITRE/OWASP mapping
+    
+    alt Rule Match Found
+        RE->>DA: Validate threat context
+        Note right of DA: ~1,800ms<br/>LLM analysis<br/>Context retrieval<br/>Behavioral assessment
+        
+        alt Confirmed Threat
+            DA->>AA: Generate remediation plan
+            Note right of AA: ~900ms<br/>MITRE technique lookup<br/>Action steps synthesis<br/>Reference gathering
+            
+            AA->>QA: Check false positive patterns
+            Note right of QA: ~300ms<br/>Query feedback_patterns<br/>Compare indicators<br/>Confidence scoring
+            
+            alt Not Learned False Positive
+                QA->>DB: Persist detection record
+                Note right of DB: ~200ms<br/>Transaction commit<br/>detection_logs junction
+                
+                DB->>WS: Trigger detection.created
+                Note right of WS: <100ms<br/>Broadcast to connections
+                
+                WS->>UI: Real-time alert notification
+                Note right of UI: <50ms<br/>Dashboard update<br/>Alert sound/visual
+                
+                Note over DB,UI: Total Latency: ~3.8 seconds
+                
+            else Matches False Positive Pattern
+                QA->>QA: Discard detection
+                Note right of QA: No database write<br/>No analyst notification<br/>Learned pattern applied
+            end
+            
+        else False Positive (AI Assessment)
+            DA->>DA: Discard without remediation
+            Note right of DA: No downstream processing<br/>Saves ~1,200ms
+        end
+        
+    else No Rule Match
+        RE->>RE: Skip - no detection
+        Note right of RE: No AI processing needed<br/>Efficient filtering
+    end
+    
+    Note over DB,UI: Performance Breakdown:<br/>Rule Evaluation: 800ms (21%)<br/>AI Validation: 1,800ms (47%)<br/>Remediation: 900ms (24%)<br/>Quality Check: 300ms (8%)<br/>Persistence & Broadcast: <100ms (0%)
+```
