@@ -4,7 +4,7 @@ This appendix documents the Model Context Protocol (MCP) tools integrated into t
 
 ---
 
-## H.1 Overview of MCP Integration
+## H.0 Overview of MCP Integration
 
 Three MCP servers run alongside the backend:
 
