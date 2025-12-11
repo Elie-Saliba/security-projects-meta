@@ -1,4 +1,4 @@
-# AI Log Anomaly Detection System - Architecture Diagrams
+# Appendix F-1.12 — AI Log Anomaly Detection System Architecture
 
 This document provides comprehensive architecture diagrams for the AI Log Anomaly Detection System, illustrating the two-tier microservices architecture, component interactions, data flows, and deployment patterns.
 
@@ -8,63 +8,65 @@ The AI Log Anomaly Detection System employs a strategic two-tier microservices a
 
 ---
 
-## 1. Complete Two-Tier Microservices Architecture
+## F-1.12.1 Complete Two-Tier Microservices Architecture
 
-### 1.1 Main System Architecture
+### F-1.12.1.1 Main System Architecture
+
+**Figure F-1.12.1.1 — Two-Tier Microservices Main Architecture**
 
 ```mermaid
 graph TB
-    subgraph Sources["🔍 Log Sources"]
+    subgraph Sources["Log Sources"]
         subgraph SourcesSub[" "]
-        EVTX[📄 Windows EVTX<br/>Security Event Logs]
-        SYSLOG[📋 Syslog<br/>RFC 3164/5424]
-        FB[🔄 FluentBit<br/>Log Forwarder]
-        WAZUH[🛡️ Wazuh<br/>Security Alerts]
-        JSON[📊 JSON Logs<br/>Application Logs]
-        IIS[🌐 IIS Logs<br/>Web Server Logs]
+        EVTX[Windows EVTX<br/>Security Event Logs]
+        SYSLOG[Syslog<br/>RFC 3164/5424]
+        FB[FluentBit<br/>Log Forwarder]
+        WAZUH[Wazuh<br/>Security Alerts]
+        JSON[JSON Logs<br/>Application Logs]
+        IIS[IIS Logs<br/>Web Server Logs]
         end
     end
     
-    subgraph LB["⚖️ Load Balancer"]
+    subgraph LB["Load Balancer"]
         subgraph LBSub[" "]
         NGINX[NGINX/HAProxy<br/>Port 80/443<br/>SSL Termination]
         end
     end
     
-    subgraph LT["🔧 Log-Transformer Tier (.NET 8.0)"]
+    subgraph LT["Log-Transformer Tier (.NET 8.0)"]
         subgraph LTSub[" "]
-        API[📡 Upload API<br/>:5001<br/>ASP.NET Core]
-        PARSER[🔌 Parser Plugins<br/>ILogIngestParser<br/>Factory Pattern]
-        NORM[⚙️ Normalizer<br/>Field Mapping<br/>Schema Validation]
-        BATCH[📦 Batch Writer<br/>Bulk INSERT<br/>500-1000 records]
-        WORKER[⚡ Background Worker<br/>Async Processing<br/>Job Queue]
+        API[Upload API<br/>:5001<br/>ASP.NET Core]
+        PARSER[Parser Plugins<br/>ILogIngestParser<br/>Factory Pattern]
+        NORM[Normalizer<br/>Field Mapping<br/>Schema Validation]
+        BATCH[Batch Writer<br/>Bulk INSERT<br/>500-1000 records]
+        WORKER[Background Worker<br/>Async Processing<br/>Job Queue]
         end
     end
     
-    subgraph DB["💾 Shared Database Layer"]
+    subgraph DB["Shared Database Layer"]
         subgraph DBSub[" "]
-        PG[(🐘 PostgreSQL 16<br/>normalized_logs<br/>detections<br/>feedback_patterns<br/>JSONB + GIN Indexes)]
-        REPLICA[(📚 Read Replica<br/>Query Distribution<br/>High Availability)]
+        PG[(PostgreSQL 16<br/>normalized_logs<br/>detections<br/>feedback_patterns<br/>JSONB + GIN Indexes)]
+        REPLICA[(Read Replica<br/>Query Distribution<br/>High Availability)]
         end
     end
     
-    subgraph AS["🤖 AI-Security Tier (Node.js 18+)"]
+    subgraph AS["AI-Security Tier (Node.js 18+)"]
         subgraph ASSub[" "]
-        LISTEN[👂 Log Listener<br/>LISTEN/NOTIFY<br/>Real-time Processing]
-        RULES[📋 Rule Engine<br/>YAML Rules<br/>Pattern Matching]
-        DETECT[🔍 DetectionAgent<br/>AI Threat Validation<br/>MCP Tools :3100]
-        ADVISOR[💡 AdvisorAgent<br/>Remediation Plans<br/>MCP Tools :3101]
-        QUALITY[✅ QualityAgent<br/>False Positive Filter<br/>MCP Tools :3102]
-        WEBAPP[🖥️ Web UI<br/>:8080<br/>React Dashboard]
-        WS[🔄 WebSocket<br/>Real-time Alerts<br/>Event Broadcasting]
+        LISTEN[Log Listener<br/>LISTEN/NOTIFY<br/>Real-time Processing]
+        RULES[Rule Engine<br/>YAML Rules<br/>Pattern Matching]
+        DETECT[DetectionAgent<br/>AI Threat Validation<br/>MCP Tools :3100]
+        ADVISOR[AdvisorAgent<br/>Remediation Plans<br/>MCP Tools :3101]
+        QUALITY[QualityAgent<br/>False Positive Filter<br/>MCP Tools :3102]
+        WEBAPP[Web UI<br/>:8080<br/>React Dashboard]
+        WS[WebSocket<br/>Real-time Alerts<br/>Event Broadcasting]
         end
     end
     
-    subgraph EXT["🌐 External Services"]
+    subgraph EXT["External Services"]
         subgraph EXTSub[" "]
-        LLM[🧠 LLM Providers<br/>GPT-4, Claude 3.5<br/>Llama 3.1]
-        MITRE[📚 MITRE ATT&CK<br/>Framework API]
-        OWASP[🔒 OWASP<br/>Knowledge Base]
+        LLM[LLM Providers<br/>GPT-4, Claude 3.5<br/>Llama 3.1]
+        MITRE[MITRE ATT&CK<br/>Framework API]
+        OWASP[OWASP<br/>Knowledge Base]
         end
     end
     
@@ -130,57 +132,59 @@ graph TB
 
 ---
 
-## 2. High-Availability Deployment Architecture
+## F-1.12.2 High-Availability Deployment Architecture
 
-### 2.1 Production Deployment Pattern
+### F-1.12.2.1 Production Deployment Pattern
+
+**Figure F-1.12.2.1 — High-Availability Production Deployment Pattern**
 
 ```mermaid
 graph TB
-    subgraph Internet["🌐 Internet"]
+    subgraph Internet["Internet"]
         subgraph InternetSub[" "]
-        USERS[👥 Security Analysts<br/>SOC Team<br/>Administrators]
-        LOGSRC[📊 Log Sources<br/>Enterprise Infrastructure<br/>Security Tools]
+        USERS[Security Analysts<br/>SOC Team<br/>Administrators]
+        LOGSRC[Log Sources<br/>Enterprise Infrastructure<br/>Security Tools]
         end
     end
     
-    subgraph AZ1["🏢 Availability Zone 1 (Primary)"]
-        subgraph LB1["⚖️ Load Balancer Layer"]
-            LB_Main[🔀 Load Balancer<br/>NGINX/HAProxy<br/>SSL Termination<br/>Health Checks]
+    subgraph AZ1["Availability Zone 1 (Primary)"]
+        subgraph LB1["Load Balancer Layer"]
+            LB_Main[Load Balancer<br/>NGINX/HAProxy<br/>SSL Termination<br/>Health Checks]
         end
         
-        subgraph AppTier1["🔧 Application Tier - Zone 1"]
-            LT1[📡 Log-Transformer<br/>Container 1<br/>Port 5001<br/>4 CPU / 8GB RAM]
-            LT2[📡 Log-Transformer<br/>Container 2<br/>Port 5001<br/>4 CPU / 8GB RAM]
-            AS1[🤖 AI-Security<br/>Container 1<br/>Port 3000<br/>4 CPU / 8GB RAM]
-            AS2[🤖 AI-Security<br/>Container 2<br/>Port 3000<br/>4 CPU / 8GB RAM]
-            FE1[🖥️ Frontend<br/>NGINX Static<br/>Port 80]
+        subgraph AppTier1["Application Tier - Zone 1"]
+            LT1[Log-Transformer<br/>Container 1<br/>Port 5001<br/>4 CPU / 8GB RAM]
+            LT2[Log-Transformer<br/>Container 2<br/>Port 5001<br/>4 CPU / 8GB RAM]
+            AS1[AI-Security<br/>Container 1<br/>Port 3000<br/>4 CPU / 8GB RAM]
+            AS2[AI-Security<br/>Container 2<br/>Port 3000<br/>4 CPU / 8GB RAM]
+            FE1[Frontend<br/>NGINX Static<br/>Port 80]
         end
         
-        subgraph DBTier1["💾 Database Tier - Zone 1"]
-            PG_Primary[🐘 PostgreSQL Primary<br/>Port 5432<br/>Read/Write<br/>16 CPU / 32GB RAM<br/>SSD Storage]
+        subgraph DBTier1["Database Tier - Zone 1"]
+            PG_Primary[PostgreSQL Primary<br/>Port 5432<br/>Read/Write<br/>16 CPU / 32GB RAM<br/>SSD Storage]
         end
         
-        subgraph Monitor1["📊 Monitoring - Zone 1"]
-            PROM1[📈 Prometheus<br/>Metrics Collection]
-            GRAF1[📊 Grafana<br/>Dashboards]
+        subgraph Monitor1["Monitoring - Zone 1"]
+            PROM1[Prometheus<br/>Metrics Collection]
+            GRAF1[Grafana<br/>Dashboards]
         end
     end
     
-    subgraph AZ2["🏢 Availability Zone 2 (Standby)"]
-        subgraph AppTier2["🔧 Application Tier - Zone 2"]
-            LT3[📡 Log-Transformer<br/>Container 3<br/>Port 5001<br/>Standby]
-            AS3[🤖 AI-Security<br/>Container 3<br/>Port 3000<br/>Standby]
+    subgraph AZ2["Availability Zone 2 (Standby)"]
+        subgraph AppTier2["Application Tier - Zone 2"]
+            LT3[Log-Transformer<br/>Container 3<br/>Port 5001<br/>Standby]
+            AS3[AI-Security<br/>Container 3<br/>Port 3000<br/>Standby]
         end
         
-        subgraph DBTier2["💾 Database Tier - Zone 2"]
-            PG_Replica[🐘 PostgreSQL Replica<br/>Port 5432<br/>Read Only<br/>Hot Standby<br/>Streaming Replication]
+        subgraph DBTier2["Database Tier - Zone 2"]
+            PG_Replica[PostgreSQL Replica<br/>Port 5432<br/>Read Only<br/>Hot Standby<br/>Streaming Replication]
         end
     end
     
-    subgraph Storage["💽 Shared Storage"]
+    subgraph Storage["Shared Storage"]
         subgraph StorageSub[" "]
-        BLOB[📁 Blob Storage<br/>Log File Archive<br/>Encrypted at Rest]
-        BACKUP[💾 Backup Storage<br/>Automated Backups<br/>Point-in-time Recovery]
+        BLOB[Blob Storage<br/>Log File Archive<br/>Encrypted at Rest]
+        BACKUP[Backup Storage<br/>Automated Backups<br/>Point-in-time Recovery]
         end
     end
     
@@ -254,69 +258,71 @@ graph TB
 
 ---
 
-## 3. Component Interaction Sequence
+## F-1.12.3 Component Interaction Sequence
 
-### 3.1 End-to-End Detection Flow
+### F-1.12.3.1 End-to-End Detection Flow
+
+**Figure F-1.12.3.1 — End-to-End Detection Flow**
 
 ```mermaid
 sequenceDiagram
-    participant LS as 📊 Log Source
-    participant LB as ⚖️ Load Balancer
-    participant LT as 📡 Log-Transformer
-    participant DB as 💾 PostgreSQL
-    participant AS as 🤖 AI-Security
-    participant DA as 🔍 DetectionAgent
-    participant AA as 💡 AdvisorAgent
-    participant QA as ✅ QualityAgent
-    participant WS as 🔄 WebSocket
-    participant UI as 🖥️ Frontend
+    participant LS as Log Source
+    participant LB as Load Balancer
+    participant LT as Log-Transformer
+    participant DB as PostgreSQL
+    participant AS as AI-Security
+    participant DA as DetectionAgent
+    participant AA as AdvisorAgent
+    participant QA as QualityAgent
+    participant WS as WebSocket
+    participant UI as Frontend
     
     Note over LS,UI: Complete Detection Lifecycle (~3.8 seconds)
     
-    LS->>LB: 📤 Upload log file (EVTX/JSON/Syslog)
-    LB->>LT: 🔀 Route to available container
+    LS->>LB: Upload log file (EVTX/JSON/Syslog)
+    LB->>LT: Route to available container
     
-    LT->>LT: 🔌 Parse via plugin system
-    LT->>LT: ⚙️ Normalize to standard schema
-    LT->>DB: 💾 Batch write (500-1000 records)
-    DB-->>LT: ✅ Insert confirmation
+    LT->>LT: Parse via plugin system
+    LT->>LT: Normalize to standard schema
+    LT->>DB: Batch write (500-1000 records)
+    DB-->>LT: Insert confirmation
     
-    DB->>AS: 📢 NOTIFY new_log_inserted
-    AS->>AS: 📋 Evaluate against YAML rules
+    DB->>AS: NOTIFY new_log_inserted
+    AS->>AS: Evaluate against YAML rules
     
     alt Rule Match Found
-        AS->>DA: 🔍 Validate threat context
-        DA->>DB: 🔍 Query related logs (MCP)
-        DB-->>DA: 📊 Historical context
-        DA->>DA: 🧠 LLM analysis (GPT-4/Claude)
+        AS->>DA: Validate threat context
+        DA->>DB: Query related logs (MCP)
+        DB-->>DA: Historical context
+        DA->>DA: LLM analysis (GPT-4/Claude)
         
         alt Real Threat Detected
-            DA-->>AS: ✅ Threat confirmed (94% confidence)
-            AS->>AA: 💡 Generate remediation plan
-            AA->>AA: 📚 Query MITRE ATT&CK (MCP)
-            AA->>AA: 🔒 Query OWASP categories (MCP)
-            AA-->>AS: 📋 Remediation plan ready
+            DA-->>AS: Threat confirmed (94% confidence)
+            AS->>AA: Generate remediation plan
+            AA->>AA: Query MITRE ATT&CK (MCP)
+            AA->>AA: Query OWASP categories (MCP)
+            AA-->>AS: Remediation plan ready
             
-            AS->>QA: ✅ Check false positive patterns
-            QA->>DB: 🔍 Query feedback history
-            DB-->>QA: 📊 Pattern data
+            AS->>QA: Check false positive patterns
+            QA->>DB: Query feedback history
+            DB-->>QA: Pattern data
             
             alt Not False Positive
-                QA-->>AS: ✅ Final validation passed
-                AS->>DB: 💾 Persist detection
-                AS->>WS: 📡 Broadcast alert
-                WS->>UI: 🚨 Real-time notification
-                UI->>UI: 🔔 Display alert to analyst
+                QA-->>AS: Final validation passed
+                AS->>DB: Persist detection
+                AS->>WS: Broadcast alert
+                WS->>UI: Real-time notification
+                UI->>UI: Display alert to analyst
             else False Positive Match
-                QA-->>AS: ❌ Filtered as false positive
+                QA-->>AS: Filtered as false positive
                 Note over QA,AS: Alert suppressed, analyst workload reduced
             end
         else Benign Activity
-            DA-->>AS: ❌ Not a threat
+            DA-->>AS: Not a threat
             Note over DA,AS: No alert generated
         end
     else No Rule Match
-        AS->>AS: ➡️ Continue monitoring
+        AS->>AS: Continue monitoring
     end
     
     Note over LS,UI: Detection complete: Sub-5 second latency achieved
@@ -371,37 +377,39 @@ sequenceDiagram
 
 ---
 
-## 5. Security Architecture
+## F-1.12.5 Security Architecture
 
-### 5.1 Security Layers
+### F-1.12.5.1 Security Layers
+
+**Figure F-1.12.5.1 — Security Architecture Layers**
 
 ```mermaid
 graph TB
-    subgraph Security["🔒 Security Architecture Layers"]
+    subgraph Security["Security Architecture Layers"]
         subgraph SecuritySub[" "]
         
-        subgraph Network["🌐 Network Security"]
-            FW[🔥 Firewall<br/>Port Restrictions<br/>IP Whitelisting]
-            VPN[🔐 VPN Access<br/>Admin Interfaces<br/>Database Connections]
-            TLS[🔒 TLS 1.3<br/>End-to-end Encryption<br/>Certificate Management]
+        subgraph Network["Network Security"]
+            FW[Firewall<br/>Port Restrictions<br/>IP Whitelisting]
+            VPN[VPN Access<br/>Admin Interfaces<br/>Database Connections]
+            TLS[TLS 1.3<br/>End-to-end Encryption<br/>Certificate Management]
         end
         
-        subgraph App["🛡️ Application Security"]
-            AUTH[🔑 Authentication<br/>JWT Tokens<br/>API Keys<br/>Role-based Access]
-            RBAC[👤 Authorization<br/>RBAC Policies<br/>Resource Permissions<br/>Admin/Analyst Roles]
-            VALID[✅ Input Validation<br/>Schema Validation<br/>Sanitization<br/>Rate Limiting]
+        subgraph App["Application Security"]
+            AUTH[Authentication<br/>JWT Tokens<br/>API Keys<br/>Role-based Access]
+            RBAC[Authorization<br/>RBAC Policies<br/>Resource Permissions<br/>Admin/Analyst Roles]
+            VALID[Input Validation<br/>Schema Validation<br/>Sanitization<br/>Rate Limiting]
         end
         
-        subgraph Data["💾 Data Security"]
-            ENCRYPT[🔐 Encryption<br/>Database: AES-256<br/>Storage: At-rest encryption<br/>Backups: Encrypted]
-            AUDIT[📋 Audit Logging<br/>All API calls<br/>MCP tool invocations<br/>Admin actions]
-            GDPR[📜 GDPR Compliance<br/>Data anonymization<br/>Retention policies<br/>Right to deletion]
+        subgraph Data["Data Security"]
+            ENCRYPT[Encryption<br/>Database: AES-256<br/>Storage: At-rest encryption<br/>Backups: Encrypted]
+            AUDIT[Audit Logging<br/>All API calls<br/>MCP tool invocations<br/>Admin actions]
+            GDPR[GDPR Compliance<br/>Data anonymization<br/>Retention policies<br/>Right to deletion]
         end
         
-        subgraph AI["🤖 AI Security"]
-            MCP_SEC[🔒 MCP Security<br/>Session isolation<br/>Tool access control<br/>Invocation logging]
-            PROMPT[🛡️ Prompt Security<br/>Injection prevention<br/>Output sanitization<br/>Context isolation]
-            LIMITS[⚡ Resource Limits<br/>Token usage caps<br/>Rate limiting<br/>Timeout controls]
+        subgraph AI["AI Security"]
+            MCP_SEC[MCP Security<br/>Session isolation<br/>Tool access control<br/>Invocation logging]
+            PROMPT[Prompt Security<br/>Injection prevention<br/>Output sanitization<br/>Context isolation]
+            LIMITS[Resource Limits<br/>Token usage caps<br/>Rate limiting<br/>Timeout controls]
         end
         
         end
