@@ -1,3 +1,5 @@
+# Appendix F-2.1 — Log-Transformer Global README
+
 # Global Documentation Navigation Guide
 
 **AI-Powered Security Intelligence Platform**  

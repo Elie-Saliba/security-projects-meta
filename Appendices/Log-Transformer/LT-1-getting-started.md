@@ -1,4 +1,4 @@
-# Getting Started
+# Appendix F-2.2 — Getting Started
 
 ## Overview
 

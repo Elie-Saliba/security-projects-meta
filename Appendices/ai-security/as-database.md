@@ -1,8 +1,8 @@
-# Database
+# Appendix F-1.6 — AI-Security Database
 
 Complete guide to the PostgreSQL database schema, models, and repositories.
 
-## Table of Contents
+## F-1.6.0 Table of Contents
 
 - [Overview](#overview)
 - [Schema Diagram](#schema-diagram)
@@ -11,7 +11,7 @@ Complete guide to the PostgreSQL database schema, models, and repositories.
 - [Migrations](#migrations)
 - [Queries](#queries)
 
-## Overview
+## F-1.6.1 Overview
 
 Uses PostgreSQL 12+ with Sequelize ORM for data persistence.
 
@@ -22,7 +22,9 @@ Uses PostgreSQL 12+ with Sequelize ORM for data persistence.
 - `feedback_patterns` - Aggregated false positive patterns
 - `detection_logs` - Many-to-many junction table
 
-## Schema Diagram
+## F-1.6.2 Schema Diagram
+
+**Figure F-1.6.2 — AI-Security Database Schema (ER Diagram)**
 
 ```mermaid
 erDiagram
@@ -91,9 +93,9 @@ erDiagram
     }
 ```
 
-## Models
+  ## F-1.6.3 Models
 
-### NormalizedLog
+  ### F-1.6.3.1 NormalizedLog
 
 **Location**: `packages/core/src/db/models/NormalizedLog.ts`
 
@@ -126,7 +128,7 @@ Stores normalized security logs from various sources.
 **Associations**:
 - `belongsToMany(Detection)` through `detection_logs`
 
-### Detection
+### F-1.6.3.2 Detection
 
 **Location**: `packages/core/src/db/models/Detection.ts`
 
@@ -164,7 +166,7 @@ Stores AI-validated threat detections.
 - `belongsToMany(NormalizedLog)` through `detection_logs`
 - `hasMany(Feedback)`
 
-### Feedback
+### F-1.6.3.3 Feedback
 
 **Location**: `packages/core/src/db/models/Feedback.ts`
 
@@ -190,7 +192,7 @@ Stores user feedback on detections for continuous learning.
 **Associations**:
 - `belongsTo(Detection)`
 
-### FeedbackPattern
+### F-1.6.3.4 FeedbackPattern
 
 **Location**: `packages/core/src/db/models/FeedbackPattern.ts`
 
@@ -217,11 +219,11 @@ Aggregated false positive patterns from user feedback.
 - `pattern_id` (unique)
 - `rule_id`
 
-## Repositories
+## F-1.6.4 Repositories
 
 Repositories provide data access layer with business logic.
 
-### LogRepository
+### F-1.6.4.1 LogRepository
 
 **Location**: `packages/core/src/db/repositories/logRepository.ts`
 
@@ -257,7 +259,7 @@ Mark multiple logs as processed.
 #### `async markGroupAsError(logIds: string[]): Promise<void>`
 Mark multiple logs as errored.
 
-### DetectionRepository
+### F-1.6.4.2 DetectionRepository
 
 **Location**: `packages/core/src/db/repositories/detectionRepository.ts`
 
@@ -281,7 +283,7 @@ Update detection (status, notes, etc.).
 #### `async delete(id: string): Promise<void>`
 Delete detection.
 
-### FeedbackRepository
+### F-1.6.4.3 FeedbackRepository
 
 **Location**: `packages/core/src/db/repositories/feedbackRepository.ts`
 
@@ -296,7 +298,7 @@ Get all feedback for a detection.
 #### `async findUnhelpful(limit?: number): Promise<Feedback[]>`
 Get unhelpful feedback for pattern analysis.
 
-### FeedbackPatternRepository
+### F-1.6.4.4 FeedbackPatternRepository
 
 **Location**: `packages/core/src/db/repositories/feedbackPatternRepository.ts`
 
@@ -314,7 +316,7 @@ Get patterns for specific rule.
 #### `async search(query: string): Promise<FeedbackPattern[]>`
 Search patterns by description.
 
-### StatsRepository
+### F-1.6.4.5 StatsRepository
 
 **Location**: `packages/core/src/db/repositories/statsRepository.ts`
 
@@ -329,18 +331,18 @@ Get detection count by severity.
 #### `async getTopRules(limit?): Promise<RuleStat[]>`
 Get most-triggered rules.
 
-## Migrations
+## F-1.6.5 Migrations
 
 Using Sequelize CLI for schema migrations.
 
-### Create Migration
+### F-1.6.5.1 Create Migration
 
 ```bash
 cd packages/core
 npx sequelize-cli migration:generate --name add-new-field
 ```
 
-### Migration Template
+### F-1.6.5.2 Migration Template
 
 ```javascript
 'use strict';
@@ -359,22 +361,22 @@ module.exports = {
 };
 ```
 
-### Run Migrations
+### F-1.6.5.3 Run Migrations
 
 ```bash
 npx sequelize-cli db:migrate
 ```
 
-### Rollback
+### F-1.6.5.4 Rollback
 
 ```bash
 npx sequelize-cli db:migrate:undo
 npx sequelize-cli db:migrate:undo:all
 ```
 
-## Queries
+## F-1.6.6 Queries
 
-### Basic Queries
+### F-1.6.6.1 Basic Queries
 
 ```typescript
 import { NormalizedLog } from '../models/NormalizedLog.js';
@@ -402,7 +404,7 @@ const recentLogs = await NormalizedLog.findAll({
 });
 ```
 
-### JSONB Field Queries
+### F-1.6.6.2 JSONB Field Queries
 
 Since `normalized_data` is JSONB, use Sequelize literal queries:
 
@@ -431,7 +433,7 @@ const logsWithSourceIP = await NormalizedLog.findAll({
 });
 ```
 
-### Complex Queries
+### F-1.6.6.3 Complex Queries
 
 ```typescript
 // Count logs by source

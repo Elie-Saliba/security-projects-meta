@@ -1,4 +1,4 @@
-# Rule System
+# Appendix F-1.11 — Rule System
 
 Complete guide to the YAML-based security rule engine.
 

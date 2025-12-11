@@ -1,3 +1,5 @@
+# Appendix F-1.13 — UI Dashboard
+
 # AI Security Dashboard - User Interface Documentation
 
 ## Overview

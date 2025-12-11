@@ -1,4 +1,4 @@
-# MCP Integration
+# Appendix F-1.9 — MCP Integration
 
 Model Context Protocol (MCP) integration for AI agents.
 

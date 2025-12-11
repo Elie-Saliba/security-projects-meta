@@ -1,4 +1,4 @@
-# Core Components
+# Appendix F-2.6 — Core Components
 
 ## Overview
 

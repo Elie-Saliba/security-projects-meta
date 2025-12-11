@@ -1,4 +1,4 @@
-# WebSocket
+# Appendix F-1.14 — WebSocket
 
 Real-time detection streaming via WebSocket connections.
 

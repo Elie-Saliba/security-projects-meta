@@ -4,16 +4,8 @@ Complete architectural overview of the AI Security Backend system.
 
 ## Table of Contents
 
-- [System Architecture](#system-architecture)
-- [Core Processing Flow](#core-processing-flow)
-- [Component Diagram](#component-diagram)
-- [Data Flow](#data-flow)
-- [Technology Stack](#technology-stack)
-- [Layer Architecture](#layer-architecture)
-- [Design Decisions](#design-decisions)
-- [Scalability Considerations](#scalability-considerations)
 
-## System Architecture
+# Appendix F-1.3 — Architecture
 
 ```mermaid
 graph TD
