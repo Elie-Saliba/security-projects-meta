@@ -1,3 +1,5 @@
+# Appendix F-2.11 — Log-Transformer README
+
 # Log-Transformer Documentation
 
 Welcome to the comprehensive documentation for the Log-Transformer platform - a universal log ingestion and normalization system designed for scalability, extensibility, and seamless integration with security analysis platforms.
