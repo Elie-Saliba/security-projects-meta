@@ -8,89 +8,59 @@ This document describes how data flows through the entire ecosystem, from initia
 
 ## System Architecture Overview
 
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                      Data Sources Layer                          │
-│  ┌─────────┐  ┌─────────┐  ┌─────────┐  ┌─────────────────┐   │
-│  │  EVTX   │  │ Syslog  │  │ Wazuh   │  │   FluentBit     │   │
-│  │  Files  │  │ Streams │  │ Alerts  │  │   + Custom      │   │
-│  └────┬────┘  └────┬────┘  └────┬────┘  └────────┬────────┘   │
-└───────┼────────────┼────────────┼─────────────────┼────────────┘
-        │            │            │                 │
-        └────────────┴────────────┴─────────────────┘
-                              │
-                              ▼
-        ┌─────────────────────────────────────────────┐
-        │      Log-Transformer Platform               │
-        │  ┌─────────────────────────────────────┐   │
-        │  │  Ingestion Layer                    │   │
-        │  │  • File Upload API                  │   │
-        │  │  • Real-time Streaming Endpoints    │   │
-        │  │  • Job Queue Management             │   │
-        │  └──────────────┬──────────────────────┘   │
-        │                 │                           │
-        │  ┌──────────────▼──────────────────────┐   │
-        │  │  Processing Layer                   │   │
-        │  │  • Background Worker                │   │
-        │  │  • Parser Registry (Plugin System)  │   │
-        │  │  • Source Detection                 │   │
-        │  └──────────────┬──────────────────────┘   │
-        │                 │                           │
-        │  ┌──────────────▼──────────────────────┐   │
-        │  │  Transformation Layer               │   │
-        │  │  • Field Extraction                 │   │
-        │  │  • Severity Mapping                 │   │
-        │  │  • Timestamp Normalization          │   │
-        │  │  • Schema Standardization           │   │
-        │  └──────────────┬──────────────────────┘   │
-        │                 │                           │
-        │  ┌──────────────▼──────────────────────┐   │
-        │  │  Storage Layer                      │   │
-        │  │  • Batch Writer                     │   │
-        │  │  • Transaction Management           │   │
-        │  │  • Database Optimization            │   │
-        │  └──────────────┬──────────────────────┘   │
-        └─────────────────┼──────────────────────────┘
-                          │
-                          ▼
-        ┌─────────────────────────────────────────────┐
-        │      Unified Data Store (PostgreSQL)        │
-        │  ┌─────────────────────────────────────┐   │
-        │  │  normalized_logs                    │   │
-        │  │  • Standardized schema              │   │
-        │  │  • JSONB flexibility                │   │
-        │  │  • Indexed for performance          │   │
-        │  │  • Time-series optimized            │   │
-        │  └──────────────┬──────────────────────┘   │
-        └─────────────────┼──────────────────────────┘
-                          │
-                          ▼
-        ┌─────────────────────────────────────────────┐
-        │      AI-Security Analysis Platform          │
-        │  ┌─────────────────────────────────────┐   │
-        │  │  Analysis Engine                    │   │
-        │  │  • ML-based threat detection        │   │
-        │  │  • Behavioral analysis              │   │
-        │  │  • Correlation engine               │   │
-        │  │  • Anomaly detection                │   │
-        │  └──────────────┬──────────────────────┘   │
-        │                 │                           │
-        │  ┌──────────────▼──────────────────────┐   │
-        │  │  Detection & Alerting               │   │
-        │  │  • Rule-based detection             │   │
-        │  │  • Alert generation                 │   │
-        │  │  • Incident creation                │   │
-        │  │  • Notification dispatch            │   │
-        │  └──────────────┬──────────────────────┘   │
-        │                 │                           │
-        │  ┌──────────────▼──────────────────────┐   │
-        │  │  Visualization & Response           │   │
-        │  │  • Security dashboards              │   │
-        │  │  • Investigation tools              │   │
-        │  │  • Response actions                 │   │
-        │  │  • Reporting                        │   │
-        │  └─────────────────────────────────────┘   │
-        └─────────────────────────────────────────────┘
+```mermaid
+flowchart TD
+  %% Data Sources
+  subgraph DS[Data Sources]
+    EVTX[EVTX Files]
+    SYSLOG[Syslog Streams]
+    WAZUH[Wazuh Alerts]
+    FB[Fluent Bit + Custom]
+  end
+
+  %% Log-Transformer
+  subgraph LT[Log-Transformer]
+    subgraph ING[Ingestion Layer]
+      UPLOAD[File Upload API]
+      STREAM[Real-time Streaming Endpoints]
+      QUEUE[Job Queue Management]
+    end
+    subgraph PROC[Processing Layer]
+      WORKER[Background Worker]
+            REGISTRY[Parser Registry / Plugins]
+      DETECT[Source Detection]
+    end
+    subgraph TRANS[Transformation Layer]
+      EXTRACT[Field Extraction]
+      SEV[Severity Mapping]
+      TSN[Timestamp Normalization]
+      SCHEMA[Schema Standardization]
+    end
+    subgraph STORE[Storage Layer]
+      BATCH[Batch Writer]
+      TX[Transaction Management]
+      DBOPT[Database Optimization]
+    end
+  end
+
+  %% Unified Data Store
+  subgraph PG[Unified Data Store - PostgreSQL]
+    NLOGS[normalized_logs\n- Standardized schema\n- JSONB flexibility\n- Indexed for performance\n- Time-series optimized]
+  end
+
+  %% Flows
+  EVTX --> UPLOAD
+  SYSLOG --> STREAM
+  WAZUH --> STREAM
+  FB --> STREAM
+
+  UPLOAD --> QUEUE
+  STREAM --> PROC
+  QUEUE --> WORKER
+  WORKER --> REGISTRY --> DETECT --> TRANS
+  TRANS --> BATCH --> PG
+
+  %% End of Log-Transformer data flow
 ```
 
 ---
