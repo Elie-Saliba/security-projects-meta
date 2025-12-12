@@ -183,6 +183,9 @@ stateDiagram-v2
     Suppressed --> [*]
     Closed --> [*]
 ```
+## E.7 Detection Status Lifecycle Sequence with Latency Analysis
+
+summarize Latency ANalysis
 
 **Figure E.7: Detection Lifecycle Sequence with Latency Analysis**
 
