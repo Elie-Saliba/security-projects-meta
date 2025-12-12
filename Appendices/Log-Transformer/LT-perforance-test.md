@@ -1,4 +1,6 @@
-# Log-Transformer Upload Performance Test - Final Results
+# Appendix F-2.12 — Log-Transformer Upload Performance Test (Final Results)
+
+This appendix presents the final results, methodology, and reproducibility steps for the Log-Transformer upload performance test, aligned with the standardized appendix format used across the project.
 
 ## How to Reproduce This Test
 

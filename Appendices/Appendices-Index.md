@@ -91,3 +91,4 @@ https://github.com/Elie-Saliba/security-projects-meta/tree/master/Appendices/Log
 | F-2.9 | End-to-End Flow | `LT-8-end-to-end-flow.md` | https://github.com/Elie-Saliba/security-projects-meta/blob/master/Appendices/Log-Transformer/LT-8-end-to-end-flow.md |
 | F-2.10 | Deployment Guide | `LT-deployment-guide.md` | https://github.com/Elie-Saliba/security-projects-meta/blob/master/Appendices/Log-Transformer/LT-deployment-guide.md |
 | F-2.11 | README | `LT-README.md` | https://github.com/Elie-Saliba/security-projects-meta/blob/master/Appendices/Log-Transformer/LT-README.md |
+| F-2.12 | Upload Performance Test (Final Results) | `LT-perforance-test.md` | https://github.com/Elie-Saliba/security-projects-meta/blob/master/Appendices/Log-Transformer/LT-perforance-test.md |
