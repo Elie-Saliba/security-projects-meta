@@ -6,45 +6,34 @@ Log-Transformer is built on a modular architecture with clearly separated concer
 
 ## Component Diagram
 
-```
-┌─────────────────────────────────────────────────────────┐
-│                    Core Components                       │
-├─────────────────────────────────────────────────────────┤
-│                                                          │
-│  ┌────────────────┐    ┌─────────────────┐             │
-│  │  API Layer     │───▶│  Job Queue      │             │
-│  │  (Endpoints)   │    │  (Database)     │             │
-│  └────────────────┘    └─────────────────┘             │
-│           │                      │                      │
-│           │                      ▼                      │
-│           │            ┌─────────────────┐             │
-│           │            │ Background      │             │
-│           │            │ Worker          │             │
-│           │            └────────┬────────┘             │
-│           │                     │                      │
-│           ▼                     ▼                      │
-│  ┌────────────────┐    ┌─────────────────┐             │
-│  │  Real-time     │───▶│ Parser Registry │             │
-│  │  Processor     │    │ (Plugin System) │             │
-│  └────────────────┘    └────────┬────────┘             │
-│                                  │                      │
-│                                  ▼                      │
-│                        ┌─────────────────┐             │
-│                        │ Normalizer      │             │
-│                        └────────┬────────┘             │
-│                                  │                      │
-│                                  ▼                      │
-│                        ┌─────────────────┐             │
-│                        │ Batch Writer    │             │
-│                        └────────┬────────┘             │
-│                                  │                      │
-│                                  ▼                      │
-│                        ┌─────────────────┐             │
-│                        │ Data Layer      │             │
-│                        │ (EF Core)       │             │
-│                        └─────────────────┘             │
-│                                                          │
-└─────────────────────────────────────────────────────────┘
+```mermaid
+flowchart TB
+  subgraph Core_Components["Core Components"]
+    direction TB
+    API["API Layer<br/>(Endpoints)"]
+    JobQueue["Job Queue<br/>(Database)"]
+    Worker["Background Worker<br/>(IngestWorker)"]
+    RealTime["Real-time Processor"]
+    ParserRegistry["Parser Registry<br/>(Plugin System)"]
+    Normalizer["Normalizer"]
+    BatchWriter["Batch Writer"]
+    DataLayer["Data Layer<br/>(EF Core)"]
+  end
+
+  API -->|create jobs / enqueue| JobQueue
+  API -->|real-time POSTs| RealTime
+
+  JobQueue -->|polled by| Worker
+  Worker -->|resolve parsers| ParserRegistry
+  RealTime -->|resolve parsers| ParserRegistry
+
+  ParserRegistry -->|stream parsed records| Normalizer
+  Normalizer -->|normalized records| BatchWriter
+  BatchWriter -->|bulk insert| DataLayer
+
+  %% Optional styling for clarity
+  classDef component fill:#f8f9fa,stroke:#2b2b2b,stroke-width:1px;
+  class API,JobQueue,Worker,RealTime,ParserRegistry,Normalizer,BatchWriter,DataLayer component;
 ```
 
 ## 1. API Layer
